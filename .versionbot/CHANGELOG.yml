@@ -1,0 +1,12 @@
+- commits:
+    - subject: CI workflow and initial src
+      hash: 262badbbfa2a6cef92bcd1f1ad0cc95e20dbca2d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.2
+  title: ""
+  date: 2023-03-12T07:16:13.667Z
