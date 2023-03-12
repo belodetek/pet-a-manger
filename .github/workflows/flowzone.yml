@@ -1,0 +1,27 @@
+name: Flowzone
+
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+    branches: [main, master]
+  # allow external contributions to use secrets within trusted code
+  pull_request_target:
+    types: [opened, synchronize, closed]
+    branches: [main, master]
+
+jobs:
+  flowzone:
+    name: Flowzone
+    uses: product-os/flowzone/.github/workflows/flowzone.yml@master
+    secrets:
+      BALENA_API_KEY: ${{ secrets.BALENA_API_KEY }}
+      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+    with:
+      balena_slugs: gh_ab77/pet-a-manger
+      repo_config: true
+      cloudflare_website: "pet-a-manger"
+      repo_description: "Automated cat feeder on RPi Zero W with Python."
