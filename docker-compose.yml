@@ -9,7 +9,6 @@ services:
   ifeed:
     build:
       context: ifeed
-    privileged: true
     tty: true
     restart: unless-stopped
     volumes:
@@ -28,7 +27,12 @@ services:
 
         exec ./main.py "$@"
 
+    privileged: false
+    # if unprivileged
+    devices:
+      - /dev/gpiomem
     labels:
+      io.balena.features.sysfs: '1'
       io.resin.features.kernel-modules: '1'
       io.resin.features.firmware: '1'
       io.resin.features.dbus: '1'
@@ -83,14 +87,14 @@ services:
               "$@"
         fi
 
-    privileged: true
-    # if unprivileged
+    privileged: false
     devices:
       - /dev/vchiq
       - /dev/video0
       - /dev/dma_heap
       - /dev/vcsm-cma
     labels:
+      io.balena.features.sysfs: '1'
       io.resin.features.kernel-modules: '1'
       io.resin.features.firmware: '1'
       io.resin.features.dbus: '1'
