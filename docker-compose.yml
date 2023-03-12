@@ -1,0 +1,99 @@
+version: '2.4'
+
+networks: {}
+
+volumes:
+  resin-data: {}
+
+services:
+  ifeed:
+    build:
+      context: ifeed
+    privileged: true
+    tty: true
+    restart: unless-stopped
+    volumes:
+      - 'resin-data:/data'
+    entrypoint:
+      - /bin/bash
+      - -c
+    command:
+      - |
+        set -axe
+
+        function cleanup() {
+            sleep infinity
+        }
+        trap cleanup EXIT
+
+        exec ./main.py "$@"
+
+    labels:
+      io.resin.features.kernel-modules: '1'
+      io.resin.features.firmware: '1'
+      io.resin.features.dbus: '1'
+      io.resin.features.supervisor-api: '1'
+      io.resin.features.resin-api: '1'
+      io.balena.update.strategy: 'kill-then-download'
+
+  iwatch:
+    build:
+      context: iwatch
+    tty: true
+    restart: unless-stopped
+    entrypoint:
+      - /bin/bash
+      - -c
+    command:
+      - |
+        set -axe
+
+        function cleanup() {
+            sleep infinity
+        }
+        trap cleanup EXIT
+
+        H264_PROFILE=${H264_PROFILE:-baseline}
+        VIDEO_WIDTH=${VIDEO_WIDTH:-640}
+        VIDEO_HEIGHT=${VIDEO_HEIGHT:-320}
+        VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-5}
+        VIDEO_BITRATE=${VIDEO_BITRATE:-100000}
+        KEYFRAME_RATE=${KEYFRAME_RATE:-10}
+
+        # audio not used
+        AUDIO_SAMPLE_RATE=${AUDIO_SAMPLE_RATE:-2205}
+
+        # https://medium.com/@allanlei/streaming-your-raspberrypi-camera-6ad02edcaae7
+        if [[ -n "$RTMP_STREAM_URL" ]]; then
+            exec raspivid -n -t 0 -fl -hf -o - \
+              -w "${VIDEO_WIDTH}" \
+              -h "${VIDEO_HEIGHT}" \
+              -fps "${VIDEO_FRAMERATE}" \
+              -b "${VIDEO_BITRATE}" \
+              -pf "${H264_PROFILE}" \
+              -g "${KEYFRAME_RATE}" \
+              | ffmpeg \
+              -f lavfi \
+              -i "anullsrc=channel_layout=stereo:sample_rate=${AUDIO_SAMPLE_RATE}" \
+              -i pipe:0 \
+              -c:v copy \
+              -c:a aac \
+              -strict experimental \
+              -f flv "${RTMP_STREAM_URL}" \
+              "$@"
+        fi
+
+    privileged: true
+    # if unprivileged
+    devices:
+      - /dev/vchiq
+      - /dev/video0
+      - /dev/dma_heap
+      - /dev/vcsm-cma
+    labels:
+      io.resin.features.kernel-modules: '1'
+      io.resin.features.firmware: '1'
+      io.resin.features.dbus: '1'
+      io.resin.features.supervisor-api: '1'
+      io.resin.features.resin-api: '1'
+      io.balena.update.strategy: 'kill-then-download'
