@@ -6,6 +6,19 @@ volumes:
   resin-data: {}
 
 services:
+  # https://github.com/mcuadros/ofelia
+  iwait:
+    image: mcuadros/ofelia:v0.3.7
+    depends_on:
+      - ifeed
+    tty: true
+    command: daemon --docker
+    restart: unless-stopped
+    labels:
+      io.balena.features.balena-socket: '1'
+      ofelia.job-local.test.schedule: "@hourly"
+      ofelia.job-local.test.command: "date"
+
   ifeed:
     build:
       context: ifeed
@@ -27,17 +40,15 @@ services:
 
         exec ./main.py "$@"
 
-    privileged: false
-    # if unprivileged
     devices:
       - /dev/gpiomem
+      - /dev/mem
     labels:
+      ofelia.enabled: 'true'
+      ofelia.job-exec.feed.schedule: '0 6 * * *'
+      ofelia.job-exec.feed.command: "/bin/bash -c 'pgrep python3.10 | xargs kill -s USR2'"
       io.balena.features.sysfs: '1'
       io.resin.features.kernel-modules: '1'
-      io.resin.features.firmware: '1'
-      io.resin.features.dbus: '1'
-      io.resin.features.supervisor-api: '1'
-      io.resin.features.resin-api: '1'
       io.balena.update.strategy: 'kill-then-download'
 
   iwatch:
@@ -87,7 +98,6 @@ services:
               "$@"
         fi
 
-    privileged: false
     devices:
       - /dev/vchiq
       - /dev/video0
@@ -96,8 +106,4 @@ services:
     labels:
       io.balena.features.sysfs: '1'
       io.resin.features.kernel-modules: '1'
-      io.resin.features.firmware: '1'
-      io.resin.features.dbus: '1'
-      io.resin.features.supervisor-api: '1'
-      io.resin.features.resin-api: '1'
       io.balena.update.strategy: 'kill-then-download'
