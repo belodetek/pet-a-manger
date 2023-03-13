@@ -1,50 +1,57 @@
 #!/usr/bin/env python3.10
 
-import os
-import sys
-import asyncio
-import RPi.GPIO as GPIO
+from config import *
+from datetime import datetime
+from functools import partial
 from time import sleep
+import asyncio
+import logging
+import os
+import pytz
+import RPi.GPIO as GPIO
+import signal
+import sys
 
-# 1,000,000us / 50Hz = 20,000us
-pwm_frequency = int(os.getenv('IFEED_PWM_FREQ', '50'))
-
-# https://raspberrypi.stackexchange.com/a/108115
-# https://cnc1.lv/PDF%20FILES/TD-8120MG_Digital_Servo.pdf
-# https://www.aliexpress.com/item/1005003256573988.html
-#
-#   500us / 20,000us = 0.025 or  2.5 % dutycycle
-# 1,000us / 20,000us = 0.05  or  5.0 % dutycycle
-# 1,500us / 20,000us = 0.075 or  7.5 % dutycycle
-# 2,000us / 20,000us = 0.1   or 10.0 % dutycycle
-# 2,500us / 20,000us = 0.125 or 12.5 % dutycycle
-duty_cycle = int(os.getenv('IFEED_DUTY_CYCLE', '5'))
-
-bounce_time = int(os.getenv('IFEED_BOUNCE_TIME', '100'))
-button1 = int(os.getenv('IFEED_BUTTON1_GPIO', '16'))
-button2 = int(os.getenv('IFEED_BUTTON2_GPIO', '22'))
-dispenser1 = int(os.getenv('IFEED_PWM1_GPIO', '3'))
-dispenser2 = int(os.getenv('IFEED_PWM2_GPIO', '7'))
+logging.basicConfig(encoding='utf-8', level=level)
 
 # https://raspberrypihq.com/use-a-push-button-with-raspberry-pi-gpio/
-def on_gpio_event(button, pwm):
+def on_gpio_event(button, pwm, edge):
     try:
-        edge = GPIO.input(button)
-        print('button: {} edge: {}'.format(button, edge))
+        if edge == None: edge = GPIO.input(button)
+        logging.info(f'button: {button} pwm: {pwm} edge: {edge}')
         # button released
-        if not edge:
+        if edge == 0:
             pwm.ChangeDutyCycle(0)
             sleep(0.1)
-            print('finished dispensing')
+            logging.info('finished dispensing')
             return
         # button pressed
         else:
-            print('dispensing...')
+            logging.info('dispensing...')
             pwm.start(0)
             pwm.ChangeDutyCycle(duty_cycle)
-    except Exception as e:
-        print('catastrophy: {}'.format(e))
-        print(sys.exc_info()[0])
+    except Exception:
+        logging.exception('catastrophy!')
+        pwm.ChangeDutyCycle(0)
+        sleep(0.1)
+
+def dispenser(pwms, signum, frame):
+    signame = signal.Signals(signum).name
+    print(f'signame: {signame} signum: {signum}: frame: {frame} pwms: {pwms}')
+    for pwm in pwms:
+        on_gpio_event(signum, pwm, 1)
+        sleep(runsecs)
+        on_gpio_event(signum, pwm, 0)
+
+async def main():
+    while True:
+        utc_time = datetime.now(tz=pytz.utc)
+        local_time = utc_time.astimezone(pytz.timezone(tz))
+        logging.info('utc_time: {} local_time: {}'.format(
+            utc_time.strftime(date_format),
+            local_time.strftime(date_format),
+        ))
+        await asyncio.sleep(60)
 
 if __name__ == '__main__':
     try:
@@ -58,19 +65,23 @@ if __name__ == '__main__':
         # servo motors
         GPIO.setup(dispenser1, GPIO.OUT)
         GPIO.setup(dispenser2, GPIO.OUT)
+
         pwm1 = GPIO.PWM(dispenser1, pwm_frequency)
         pwm2 = GPIO.PWM(dispenser2, pwm_frequency)
+        pwms = [pwm1, pwm2]
 
         # https://raspberrypi.stackexchange.com/a/104792/9812
-        GPIO.add_event_detect(button1, GPIO.BOTH, callback=lambda x: on_gpio_event(button1, pwm1), bouncetime=bounce_time)
-        GPIO.add_event_detect(button2, GPIO.BOTH, callback=lambda x: on_gpio_event(button2, pwm2), bouncetime=bounce_time)
+        GPIO.add_event_detect(button1, GPIO.BOTH, callback=lambda x: on_gpio_event(button1, pwm1, None), bouncetime=bounce_time)
+        GPIO.add_event_detect(button2, GPIO.BOTH, callback=lambda x: on_gpio_event(button2, pwm2, None), bouncetime=bounce_time)
+
+        # dispense on SIGUSR2
+        signal.signal(signal.SIGUSR2, partial(dispenser, pwms))
 
         loop = asyncio.get_event_loop()
-        loop.run_forever()
+        loop.run_until_complete(main())
 
-    except Exception as e:
-        print('catastrophy: {}'.format(e))
-        print(sys.exc_info()[0])
+    except Exception:
+        logging.exception('catastrophy!')
 
     finally:
         GPIO.cleanup()
