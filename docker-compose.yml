@@ -16,8 +16,9 @@ services:
     restart: unless-stopped
     labels:
       io.balena.features.balena-socket: '1'
-      ofelia.job-local.test.schedule: "@hourly"
-      ofelia.job-local.test.command: "date"
+      ofelia.job-local.restart-self.schedule: "@hourly"
+      # FIXME: restart container to pick up new ifeed container name
+      ofelia.job-local.restart-self.command: "kill -s SIGTERM 1"
 
   ifeed:
     build:
