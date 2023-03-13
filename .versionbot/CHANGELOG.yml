@@ -1,4 +1,16 @@
 - commits:
+    - subject: iwait config and istream/iwatch
+      hash: 80f3285ed2aec5bcf31002911a471046e4ca1928
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.6
+  title: ""
+  date: 2023-03-13T22:06:23.808Z
+- commits:
     - subject: Pick up new container name
       hash: 6079f0dc9e22a4796f89d1e7b700c0a18b52f2c1
       body: ""
