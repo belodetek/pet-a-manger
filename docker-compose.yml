@@ -12,13 +12,37 @@ services:
     depends_on:
       - ifeed
     tty: true
-    command: daemon --docker
+    entrypoint:
+      - /bin/sh
+      - -c
+    command:
+      - |
+        set -axe
+
+        function cleanup() {
+            sleep infinity
+        }
+        trap cleanup EXIT
+
+        IFEED_SCHEDULE=${IFEED_SCHEDULE:-15 2 6 * * *}
+
+        cat << EOF > config.ini
+        [job-exec "ifeed"]
+        schedule = ${IFEED_SCHEDULE}
+        container = ifeed
+        command = /bin/bash -c 'pgrep python3.10 | xargs kill -s USR2'
+
+        [job-local "self-immolate"]
+        schedule = @hourly
+        command = kill -s SIGTERM 1
+        EOF
+        cat < config.ini
+
+        ofelia daemon --config=config.ini
+
     restart: unless-stopped
     labels:
       io.balena.features.balena-socket: '1'
-      ofelia.job-local.restart-self.schedule: "@hourly"
-      # FIXME: restart container to pick up new ifeed container name
-      ofelia.job-local.restart-self.command: "kill -s SIGTERM 1"
 
   ifeed:
     build:
@@ -45,16 +69,13 @@ services:
       - /dev/gpiomem
       - /dev/mem
     labels:
-      ofelia.enabled: 'true'
-      ofelia.job-exec.feed.schedule: '0 6 * * *'
-      ofelia.job-exec.feed.command: "/bin/bash -c 'pgrep python3.10 | xargs kill -s USR2'"
       io.balena.features.sysfs: '1'
       io.resin.features.kernel-modules: '1'
       io.balena.update.strategy: 'kill-then-download'
 
-  iwatch:
+  istream:
     build:
-      context: iwatch
+      context: istream
     tty: true
     restart: unless-stopped
     entrypoint:
@@ -71,13 +92,13 @@ services:
 
         H264_PROFILE=${H264_PROFILE:-baseline}
         VIDEO_WIDTH=${VIDEO_WIDTH:-640}
-        VIDEO_HEIGHT=${VIDEO_HEIGHT:-320}
+        VIDEO_HEIGHT=${VIDEO_HEIGHT:-360}
         VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-5}
-        VIDEO_BITRATE=${VIDEO_BITRATE:-100000}
+        VIDEO_BITRATE=${VIDEO_BITRATE:-80000}
         KEYFRAME_RATE=${KEYFRAME_RATE:-10}
 
         # audio not used
-        AUDIO_SAMPLE_RATE=${AUDIO_SAMPLE_RATE:-2205}
+        AUDIO_SAMPLE_RATE=${AUDIO_SAMPLE_RATE:-22050}
 
         # https://medium.com/@allanlei/streaming-your-raspberrypi-camera-6ad02edcaae7
         if [[ -n "$RTMP_STREAM_URL" ]]; then
@@ -107,4 +128,42 @@ services:
     labels:
       io.balena.features.sysfs: '1'
       io.resin.features.kernel-modules: '1'
+      io.balena.update.strategy: 'kill-then-download'
+
+  iwatch:
+    build:
+      context: iwatch
+    tty: true
+    restart: unless-stopped
+    entrypoint:
+      - /bin/bash
+      - -c
+    command:
+      - |
+        set -axe
+
+        function cleanup() {
+            sleep infinity
+        }
+        trap cleanup EXIT
+
+        IWATCH_URL=${IWATCH_URL:-https://pet-a-manger.pages.dev/}
+
+        if [[ -n "$IWATCH_HTML" ]]; then
+            echo "${IWATCH_HTML}" > iwatch.html
+
+            while true; do
+                echo -e 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n' \
+                  | cat - iwatch.html | nc -l -p 8080 -q 0; sleep 1s;
+            done
+        else
+            while true; do
+                echo -e "HTTP/1.1 302 Found\r\nLocation: ${IWATCH_URL}\r\nConnection: close\r\n\r\n" \
+                  | nc -l -p 8080 -q 0; sleep 1s;
+            done
+        fi
+
+    ports:
+      - '80:8080/tcp'
+    labels:
       io.balena.update.strategy: 'kill-then-download'

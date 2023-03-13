@@ -51,7 +51,7 @@ async def main():
             utc_time.strftime(date_format),
             local_time.strftime(date_format),
         ))
-        await asyncio.sleep(60)
+        await asyncio.sleep(3600)
 
 if __name__ == '__main__':
     try:

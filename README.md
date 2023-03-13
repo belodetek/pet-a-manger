@@ -1,4 +1,36 @@
 # pet-a-manger
-> 🐈‍⬛🐈‍⬛ iwait, ifeed, iwatch...
+> 🐈‍⬛🐈‍⬛ iwait, ifeed, istream while iwatch...
 
 Automated cat feeder on RPi Zero W with Python.
+
+## iwait
+> trigger dispensation on a [cron schedule](https://pkg.go.dev/github.com/robfig/cron)
+
+* `IFEED_SCHEDULE` controls cron schedule
+* `15 2 6 * * *` to dispense `@06:02:15`
+
+
+## ifeed
+> dispense on `GPIO` or `SIGUSR2` events
+
+* `IFEED_RUNSECS` controls dispensation duration on `USR2` event
+* `IFEED_BUTTON{1,2}_GPIO` sets button pins (physical board pin numbering scheme)
+* `IFEED_PWM{1,2}_GPIO` sets servo motor pins
+
+
+## istream
+> stream video to RTMP URL
+
+* `RTMP_STREAM_URL` controls where to stream
+* `H264_PROFILE` sets H.264 profile (e.g. main, baseline)
+* `VIDEO_{WIDTH,HEIGHT}` sets resolution
+* `VIDEO_{FRAMERATE,BITRATE}` sets video frame-rate and quality
+* `KEYFRAME_RATE` sets control frame every X video rates
+* `AUDIO_SAMPLE_RATE` sets empty audio stream bitrate
+
+
+## iwatch
+> simple HTTP redirect or static HTML
+
+* `IWATCH_HTML` controls static HTML content (e.g. iframe/embed)
+* `IWATCH_URL` controls redirect URL if no static HTML specified

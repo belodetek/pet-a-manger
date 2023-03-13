@@ -1,5 +1,8 @@
-FROM balenalib/rpi-raspbian
+FROM arm32v6/alpine:3
 
-RUN install_packages ffmpeg
+RUN apk add --no-cache \
+    bash \
+    curl \
+    netcat-openbsd
 
-CMD ["balena-idle"]
+CMD ["sleep", "infinity"]
