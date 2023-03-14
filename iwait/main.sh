@@ -41,4 +41,4 @@ cat < "${globconfig}" > "${config}"
 cat < "${jobconfig}" >> "${config}"
 cat < "${config}"
 
-ofelia daemon --config="${config}"
+exec ofelia daemon --config="${config}"
