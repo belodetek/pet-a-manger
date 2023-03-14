@@ -1,4 +1,16 @@
 - commits:
+    - subject: Turn off swap
+      hash: 636963c17b44d8b63502642999c6ff8bd61529fb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.15
+  title: ""
+  date: 2023-03-14T22:31:38.827Z
+- commits:
     - subject: Fix alert logic
       hash: 5faee46127c02e32342aeafac743554d343666b4
       body: ""
