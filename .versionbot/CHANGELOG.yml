@@ -1,4 +1,16 @@
 - commits:
+    - subject: Heartbeat URL ping
+      hash: 0e15bfa2609721ad42223a0eded5955048025077
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.13
+  title: ""
+  date: 2023-03-14T16:40:23.943Z
+- commits:
     - subject: Make Slack/errors configurable
       hash: e3ad650534cd37e5e2897cff654cf4255d89d369
       body: ""
