@@ -1,4 +1,16 @@
 - commits:
+    - subject: Make Slack/errors configurable
+      hash: e3ad650534cd37e5e2897cff654cf4255d89d369
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.12
+  title: ""
+  date: 2023-03-14T04:24:43.806Z
+- commits:
     - subject: Remove redundant command params
       hash: 8aecce772bf9efb1b12e682cce77c32ffb19d957
       body: ""
