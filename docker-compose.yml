@@ -21,6 +21,7 @@ services:
         set -axe
 
         function cleanup() {
+            rm -f "${globconfig}" "${jobconfig}" "${config}"
             sleep infinity
         }
         trap cleanup EXIT
@@ -29,16 +30,18 @@ services:
 
         name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')"
 
-        if [[ -n "$IFEED_SLACK_WEBHOOK_URL" ]]; then
-            cat << EOF > config.ini
-            [global]
-            slack-only-on-error = true
-            slack-webhook = ${IFEED_SLACK_WEBHOOK_URL}
+        globconfig="$(mktemp)"
+        jobconfig="$(mktemp)"
+        config="$(mktemp)"
 
-            EOF
-        fi
+        cat << EOF > "${globconfig}"
+        [global]
+        slack-only-on-error = true
+        slack-webhook = ${IFEED_SLACK_WEBHOOK_URL}
 
-        cat << EOF >> config.ini
+        EOF
+
+        cat << EOF >> "${jobconfig}"
         [job-exec "ifeed"]
         schedule = ${IFEED_SCHEDULE}
         container = ${name}
@@ -48,9 +51,15 @@ services:
         schedule = @every 15m
         command = kill -s SIGTERM 1
         EOF
-        cat < config.ini
 
-        ofelia daemon --config=config.ini
+        if [[ -n "$IFEED_SLACK_WEBHOOK_URL" ]]; then
+            cat < "${globconfig}" > "${config}"
+        fi
+        cat < "${globconfig}" > "${config}"
+        cat < "${jobconfig}" >> "${config}"
+        cat < "${config}"
+
+        ofelia daemon --config="${config}"
 
     restart: unless-stopped
     labels:
