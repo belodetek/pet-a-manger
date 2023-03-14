@@ -8,7 +8,8 @@ volumes:
 services:
   # https://github.com/mcuadros/ofelia
   iwait:
-    image: mcuadros/ofelia:v0.3.7
+    build:
+      context: iwait
     depends_on:
       - ifeed
     tty: true
@@ -26,14 +27,16 @@ services:
 
         IFEED_SCHEDULE=${IFEED_SCHEDULE:-15 2 6 * * *}
 
+        name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')"
+
         cat << EOF > config.ini
         [job-exec "ifeed"]
         schedule = ${IFEED_SCHEDULE}
-        container = ifeed
+        container = ${name}
         command = /bin/bash -c 'pgrep python3.10 | xargs kill -s USR2'
 
         [job-local "self-immolate"]
-        schedule = @hourly
+        schedule = @every 15m
         command = kill -s SIGTERM 1
         EOF
         cat < config.ini
@@ -93,12 +96,12 @@ services:
         H264_PROFILE=${H264_PROFILE:-baseline}
         VIDEO_WIDTH=${VIDEO_WIDTH:-640}
         VIDEO_HEIGHT=${VIDEO_HEIGHT:-360}
-        VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-5}
-        VIDEO_BITRATE=${VIDEO_BITRATE:-80000}
-        KEYFRAME_RATE=${KEYFRAME_RATE:-10}
+        VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-25}
+        VIDEO_BITRATE=${VIDEO_BITRATE:-500000}
+        KEYFRAME_RATE=${KEYFRAME_RATE:-50}
 
         # audio not used
-        AUDIO_SAMPLE_RATE=${AUDIO_SAMPLE_RATE:-22050}
+        AUDIO_SAMPLE_RATE=${AUDIO_SAMPLE_RATE:-44100}
 
         # https://medium.com/@allanlei/streaming-your-raspberrypi-camera-6ad02edcaae7
         if [[ -n "$RTMP_STREAM_URL" ]]; then
