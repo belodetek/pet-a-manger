@@ -16,51 +16,7 @@ services:
     entrypoint:
       - /bin/sh
       - -c
-    command:
-      - |
-        set -axe
-
-        function cleanup() {
-            rm -f "${globconfig}" "${jobconfig}" "${config}"
-            sleep infinity
-        }
-        trap cleanup EXIT
-
-        IFEED_SCHEDULE=${IFEED_SCHEDULE:-15 2 6 * * *}
-
-        name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')"
-
-        globconfig="$(mktemp)"
-        jobconfig="$(mktemp)"
-        config="$(mktemp)"
-
-        cat << EOF > "${globconfig}"
-        [global]
-        slack-only-on-error = true
-        slack-webhook = ${IFEED_SLACK_WEBHOOK_URL}
-
-        EOF
-
-        cat << EOF >> "${jobconfig}"
-        [job-exec "ifeed"]
-        schedule = ${IFEED_SCHEDULE}
-        container = ${name}
-        command = /bin/bash -c 'pgrep python3.10 | xargs kill -s USR2'
-
-        [job-local "self-immolate"]
-        schedule = @every 15m
-        command = kill -s SIGTERM 1
-        EOF
-
-        if [[ -n "$IFEED_SLACK_WEBHOOK_URL" ]]; then
-            cat < "${globconfig}" > "${config}"
-        fi
-        cat < "${globconfig}" > "${config}"
-        cat < "${jobconfig}" >> "${config}"
-        cat < "${config}"
-
-        ofelia daemon --config="${config}"
-
+    command: main.sh
     restart: unless-stopped
     labels:
       io.balena.features.balena-socket: '1'
