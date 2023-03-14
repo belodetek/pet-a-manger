@@ -1,4 +1,16 @@
 - commits:
+    - subject: Wait for supervisor before streaming
+      hash: 7c2b90a3beef9f92e7d1654c516abe10610a8c6a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.16
+  title: ""
+  date: 2023-03-14T23:06:32.956Z
+- commits:
     - subject: Turn off swap
       hash: 636963c17b44d8b63502642999c6ff8bd61529fb
       body: ""
