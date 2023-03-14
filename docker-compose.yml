@@ -5,6 +5,10 @@ networks: {}
 volumes:
   resin-data: {}
 
+x-common: &common
+  tty: true
+  restart: unless-stopped
+
 services:
   # https://github.com/mcuadros/ofelia
   iwait:
@@ -12,16 +16,16 @@ services:
       context: iwait
     depends_on:
       - ifeed
-    tty: true
-    restart: unless-stopped
+    <<: *common
+    restart: always
     labels:
       io.balena.features.balena-socket: '1'
 
   ifeed:
     build:
       context: ifeed
-    tty: true
-    restart: unless-stopped
+    <<: *common
+    restart: always
     volumes:
       - 'resin-data:/data'
     entrypoint:
@@ -49,8 +53,7 @@ services:
   istream:
     build:
       context: istream
-    tty: true
-    restart: unless-stopped
+    <<: *common
     entrypoint:
       - /bin/bash
       - -c
@@ -62,6 +65,8 @@ services:
             sleep infinity
         }
         trap cleanup EXIT
+
+        swapoff --all
 
         H264_PROFILE=${H264_PROFILE:-baseline}
         VIDEO_WIDTH=${VIDEO_WIDTH:-640}
@@ -105,8 +110,7 @@ services:
   iwatch:
     build:
       context: iwatch
-    tty: true
-    restart: unless-stopped
+    <<: *common
     entrypoint:
       - /bin/bash
       - -c
