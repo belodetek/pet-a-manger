@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix alert logic
+      hash: 5faee46127c02e32342aeafac743554d343666b4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.14
+  title: ""
+  date: 2023-03-14T21:11:52.785Z
+- commits:
     - subject: Heartbeat URL ping
       hash: 0e15bfa2609721ad42223a0eded5955048025077
       body: ""
