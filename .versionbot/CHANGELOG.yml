@@ -1,4 +1,16 @@
 - commits:
+    - subject: Move codeblock to shell script
+      hash: 2a1e21464e7be03612a0d7709fe9c14ab9620aad
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.10
+  title: ""
+  date: 2023-03-14T03:45:28.727Z
+- commits:
     - subject: Global config
       hash: c8931b6105c18976b4b12db932f55ec3a6849a26
       body: ""
