@@ -1,4 +1,16 @@
 - commits:
+    - subject: Remove redundant command params
+      hash: 8aecce772bf9efb1b12e682cce77c32ffb19d957
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.11
+  title: ""
+  date: 2023-03-14T04:02:14.684Z
+- commits:
     - subject: Move codeblock to shell script
       hash: 2a1e21464e7be03612a0d7709fe9c14ab9620aad
       body: ""
