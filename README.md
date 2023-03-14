@@ -9,6 +9,8 @@ Automated cat feeder on RPi Zero W with Python.
 * `IFEED_SCHEDULE` controls cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
 * `TZ` sets timezone (e.g. `US/Pacific`)
 * `IFEED_SLACK_WEBHOOK_URL` controls where scheduling errors go in Slack
+* `IFEED_SLACK_ERRORS_ONLY` controls Slack logging verbosity (e.g. `true` or `false`)
+* `IFEED_HEARTBEAT_URL` send an empty HTTP request to [reset alert trigger](https://healthchecks.io/)
 
 
 ## ifeed

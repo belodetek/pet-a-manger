@@ -8,6 +8,7 @@ import asyncio
 import logging
 import os
 import pytz
+import requests
 import RPi.GPIO as GPIO
 import signal
 import sys
@@ -18,30 +19,43 @@ logging.basicConfig(encoding='utf-8', level=level)
 def on_gpio_event(button, pwm, edge):
     try:
         if edge == None: edge = GPIO.input(button)
-        logging.info(f'button: {button} pwm: {pwm} edge: {edge}')
+        logging.debug(f'button: {button} pwm: {pwm} edge: {edge}')
         # button released
         if edge == 0:
             pwm.ChangeDutyCycle(0)
             sleep(0.1)
             logging.info('finished dispensing')
-            return
         # button pressed
         else:
             logging.info('dispensing...')
             pwm.start(0)
             pwm.ChangeDutyCycle(duty_cycle)
-    except Exception:
+    except:
         logging.exception('catastrophy!')
         pwm.ChangeDutyCycle(0)
         sleep(0.1)
+        return False
+
+    return True
 
 def dispenser(pwms, signum, frame):
+    try:
     signame = signal.Signals(signum).name
-    print(f'signame: {signame} signum: {signum}: frame: {frame} pwms: {pwms}')
+    logging.debug(f'signame: {signame} signum: {signum}: frame: {frame} pwms: {pwms}')
     for pwm in pwms:
-        on_gpio_event(signum, pwm, 1)
+        start = on_gpio_event(signum, pwm, 1)
         sleep(runsecs)
-        on_gpio_event(signum, pwm, 0)
+        finish = on_gpio_event(signum, pwm, 0)
+        success = start and finish
+    except:
+        logging.exception('catastrophy!')
+        pwm.ChangeDutyCycle(0)
+        sleep(0.1)
+        success = False
+    finally:
+        if alert_reset_url and not success:
+            r = requests.get(alert_reset_url)
+            logging.warn(f'dispensation: {success} url: {alert_reset_url} status_code: {r.status_code} headers: {r.headers} content: {r.content} text: {r.text}')
 
 async def main():
     while True:
