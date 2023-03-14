@@ -9,6 +9,7 @@ function cleanup() {
 trap cleanup EXIT
 
 IFEED_SCHEDULE=${IFEED_SCHEDULE:-15 2 6 * * *}
+IFEED_SLACK_ERRORS_ONLY=${IFEED_SLACK_ERRORS_ONLY:-true}
 
 name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')"
 
@@ -18,7 +19,7 @@ config="$(mktemp)"
 
 cat << EOF > "${globconfig}"
 [global]
-slack-only-on-error = true
+slack-only-on-error = ${IFEED_SLACK_ERRORS_ONLY}
 slack-webhook = ${IFEED_SLACK_WEBHOOK_URL}
 
 EOF
