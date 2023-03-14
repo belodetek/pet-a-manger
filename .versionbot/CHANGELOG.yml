@@ -1,4 +1,16 @@
 - commits:
+    - subject: Dynamically query running container name
+      hash: fde70daaf7102cda13acf510502288a6bac791bc
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.7
+  title: ""
+  date: 2023-03-14T00:09:24.973Z
+- commits:
     - subject: iwait config and istream/iwatch
       hash: 80f3285ed2aec5bcf31002911a471046e4ca1928
       body: ""
