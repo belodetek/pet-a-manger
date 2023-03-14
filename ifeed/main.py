@@ -39,23 +39,22 @@ def on_gpio_event(button, pwm, edge):
     return True
 
 def dispenser(pwms, signum, frame):
-    try:
     signame = signal.Signals(signum).name
     logging.debug(f'signame: {signame} signum: {signum}: frame: {frame} pwms: {pwms}')
     for pwm in pwms:
-        start = on_gpio_event(signum, pwm, 1)
-        sleep(runsecs)
-        finish = on_gpio_event(signum, pwm, 0)
-        success = start and finish
-    except:
-        logging.exception('catastrophy!')
-        pwm.ChangeDutyCycle(0)
-        sleep(0.1)
-        success = False
-    finally:
-        if alert_reset_url and not success:
+        try:
+            success = False
+            start = on_gpio_event(signum, pwm, 1)
+            sleep(runsecs)
+            finish = on_gpio_event(signum, pwm, 0)
+            success = start and finish
+            assert success
             r = requests.get(alert_reset_url)
-            logging.warn(f'dispensation: {success} url: {alert_reset_url} status_code: {r.status_code} headers: {r.headers} content: {r.content} text: {r.text}')
+            logging.info(f'pwm: {pwm} dispensation: {success} url: {alert_reset_url} status_code: {r.status_code} headers: {r.headers} content: {r.content} text: {r.text}')
+        except:
+            logging.exception('catastrophy!')
+            pwm.ChangeDutyCycle(0)
+            sleep(0.1)
 
 async def main():
     while True:
