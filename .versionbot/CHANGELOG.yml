@@ -1,4 +1,16 @@
 - commits:
+    - subject: Slack error notifications
+      hash: b1f3e5404575ff2e0dd394a4ead5a8426206416d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.8
+  title: ""
+  date: 2023-03-14T01:52:07.669Z
+- commits:
     - subject: Dynamically query running container name
       hash: fde70daaf7102cda13acf510502288a6bac791bc
       body: ""
