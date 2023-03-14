@@ -29,7 +29,16 @@ services:
 
         name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')"
 
-        cat << EOF > config.ini
+        if [[ -n "$IFEED_SLACK_WEBHOOK_URL" ]]; then
+            cat << EOF > config.ini
+            [global]
+            slack-only-on-error = true
+            slack-webhook = ${IFEED_SLACK_WEBHOOK_URL}
+
+            EOF
+        fi
+
+        cat << EOF >> config.ini
         [job-exec "ifeed"]
         schedule = ${IFEED_SCHEDULE}
         container = ${name}

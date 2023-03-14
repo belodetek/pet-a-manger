@@ -6,8 +6,9 @@ Automated cat feeder on RPi Zero W with Python.
 ## iwait
 > trigger dispensation on a [cron schedule](https://pkg.go.dev/github.com/robfig/cron)
 
-* `IFEED_SCHEDULE` control cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
+* `IFEED_SCHEDULE` controls cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
 * `TZ` sets timezone (e.g. `US/Pacific`)
+* `IFEED_SLACK_WEBHOOK_URL` controls where scheduling errors go in Slack
 
 
 ## ifeed
