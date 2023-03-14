@@ -1,4 +1,16 @@
 - commits:
+    - subject: Global config
+      hash: c8931b6105c18976b4b12db932f55ec3a6849a26
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.9
+  title: ""
+  date: 2023-03-14T03:11:19.111Z
+- commits:
     - subject: Slack error notifications
       hash: b1f3e5404575ff2e0dd394a4ead5a8426206416d
       body: ""
