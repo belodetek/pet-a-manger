@@ -13,10 +13,6 @@ services:
     depends_on:
       - ifeed
     tty: true
-    entrypoint:
-      - /bin/sh
-      - -c
-    command: main.sh
     restart: unless-stopped
     labels:
       io.balena.features.balena-socket: '1'
@@ -40,7 +36,7 @@ services:
         }
         trap cleanup EXIT
 
-        exec ./main.py "$@"
+        exec ./main.py
 
     devices:
       - /dev/gpiomem
@@ -93,8 +89,7 @@ services:
               -c:v copy \
               -c:a aac \
               -strict experimental \
-              -f flv "${RTMP_STREAM_URL}" \
-              "$@"
+              -f flv "${RTMP_STREAM_URL}"
         fi
 
     devices:
