@@ -1,4 +1,16 @@
 - commits:
+    - subject: Raise privileges to control swap
+      hash: f2c998837bc40565dc1d1609fbabc0d009038a18
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.17
+  title: ""
+  date: 2023-03-15T00:58:19.700Z
+- commits:
     - subject: Wait for supervisor before streaming
       hash: 7c2b90a3beef9f92e7d1654c516abe10610a8c6a
       body: ""
