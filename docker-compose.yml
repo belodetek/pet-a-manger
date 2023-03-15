@@ -54,6 +54,13 @@ services:
     build:
       context: istream
     <<: *common
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+    security_opt:
+      - apparmor:unconfined
+      - seccomp:unconfined
     entrypoint:
       - /bin/bash
       - -c
@@ -66,7 +73,7 @@ services:
         }
         trap cleanup EXIT
 
-        swapoff --all
+        swapoff --all || true
 
         H264_PROFILE=${H264_PROFILE:-baseline}
         VIDEO_WIDTH=${VIDEO_WIDTH:-640}
