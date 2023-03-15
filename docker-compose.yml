@@ -90,7 +90,7 @@ services:
             # (RPi Zero W) begin streaming only when balena-supervisor is idle
             if cat </proc/cpuinfo | grep -q 'Raspberry Pi Zero W'; then
                 update_pending=true
-                until [[ update_pending =~ false ]]; do
+                until [[ "$update_pending" =~ false ]]; do
                     update_pending="$(curl --silent --retry 3 --fail \
                       "${BALENA_SUPERVISOR_ADDRESS}/v1/device?apikey=${BALENA_SUPERVISOR_API_KEY}" \
                       -H "Content-Type:application/json" | jq -r '.update_pending')"
