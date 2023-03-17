@@ -26,8 +26,6 @@ services:
       context: ifeed
     <<: *common
     restart: always
-    volumes:
-      - 'resin-data:/data'
     entrypoint:
       - /bin/bash
       - -c
@@ -69,11 +67,10 @@ services:
         set -axe
 
         function cleanup() {
+            rm -f "${IWATCH_STILL}"
             sleep infinity
         }
         trap cleanup EXIT
-
-        swapoff --all || true
 
         H264_PROFILE=${H264_PROFILE:-baseline}
         VIDEO_WIDTH=${VIDEO_WIDTH:-640}
@@ -85,20 +82,20 @@ services:
         # audio not used
         AUDIO_SAMPLE_RATE=${AUDIO_SAMPLE_RATE:-44100}
 
+        # (RPi Zero W) begin only when balena-supervisor is idle
+        if cat </proc/cpuinfo | grep -q 'Raspberry Pi Zero W'; then
+            update_pending=true
+            until [[ "$update_pending" =~ false ]]; do
+                update_pending="$(curl --silent --retry 3 --fail \
+                  "${BALENA_SUPERVISOR_ADDRESS}/v1/device?apikey=${BALENA_SUPERVISOR_API_KEY}" \
+                  -H "Content-Type:application/json" | jq -r '.update_pending')"
+                echo "update_pending: ${update_pending}"
+                sleep "$(( (RANDOM % 10) + 10 ))s"
+            done
+        fi
+
         # https://medium.com/@allanlei/streaming-your-raspberrypi-camera-6ad02edcaae7
         if [[ -n "$RTMP_STREAM_URL" ]]; then
-            # (RPi Zero W) begin streaming only when balena-supervisor is idle
-            if cat </proc/cpuinfo | grep -q 'Raspberry Pi Zero W'; then
-                update_pending=true
-                until [[ "$update_pending" =~ false ]]; do
-                    update_pending="$(curl --silent --retry 3 --fail \
-                      "${BALENA_SUPERVISOR_ADDRESS}/v1/device?apikey=${BALENA_SUPERVISOR_API_KEY}" \
-                      -H "Content-Type:application/json" | jq -r '.update_pending')"
-                    echo "update_pending: ${update_pending}"
-                    sleep "$(( (RANDOM % 10) + 10 ))s"
-                done
-            fi
-
             exec raspivid -n -t 0 -fl -hf -o - \
               -w "${VIDEO_WIDTH}" \
               -h "${VIDEO_HEIGHT}" \
@@ -114,8 +111,18 @@ services:
               -c:a aac \
               -strict experimental \
               -f flv "${RTMP_STREAM_URL}"
+
+        # capture stills
+        elif [[ -n "$IWATCH_STILL" ]]; then
+            exec raspistill --verbose --nopreview \
+              --output "${IWATCH_STILL}" \
+              --timelapse 60000
+        else
+            false
         fi
 
+    volumes:
+      - 'resin-data:/data'
     devices:
       - /dev/vchiq
       - /dev/video0
@@ -143,8 +150,7 @@ services:
         }
         trap cleanup EXIT
 
-        IWATCH_URL=${IWATCH_URL:-https://pet-a-manger.pages.dev/}
-
+        # serve static HTML
         if [[ -n "$IWATCH_HTML" ]]; then
             echo "${IWATCH_HTML}" > iwatch.html
 
@@ -152,13 +158,31 @@ services:
                 echo -e 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n' \
                   | cat - iwatch.html | nc -l -p 8080 -q 0; sleep 1s;
             done
-        else
+
+        # .. or serve HTTP redirect
+        elif [[ -n "$IWATCH_URL" ]]; then
             while true; do
                 echo -e "HTTP/1.1 302 Found\r\nLocation: ${IWATCH_URL}\r\nConnection: close\r\n\r\n" \
                   | nc -l -p 8080 -q 0; sleep 1s;
             done
+
+        # .. or just serve stills
+        elif [[ -n "$IWATCH_STILL" ]]; then
+            while true; do
+                if [[ -f "$IWATCH_STILL" ]]; then
+                    content_length="$(stat -c '%s' "${IWATCH_STILL}")"
+                    echo -e "HTTP/1.1 200 OK\r\nContent-Type: image/x-png\r\nContent-Length: ${content_length}\r\n\r\n" \
+                      | cat - "${IWATCH_STILL}" | nc -l -p 8080 -q 0; sleep 1s;
+                else
+                    sleep $(( (RANDOM % 15) + 15 ))
+                fi
+            done
+        else
+            false
         fi
 
+    volumes:
+      - 'resin-data:/data'
     ports:
       - '80:8080/tcp'
     labels:

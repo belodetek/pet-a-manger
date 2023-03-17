@@ -1,8 +1,12 @@
-FROM balenalib/rpi-raspbian
+FROM arm32v6/alpine:3
 
-RUN install_packages \
+RUN apk add --no-cache \
+    bash \
     curl \
     ffmpeg \
-    jq
+    jq \
+    raspberrypi
 
-CMD ["balena-idle"]
+ENV PATH="/opt/vc/bin:${PATH}"
+
+CMD ["sleep", "infinity"]
