@@ -3,6 +3,8 @@
 
 Automated cat feeder on RPi Zero W with Python.
 
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/belodetek/pet-a-manger)
+
 ## iwait
 > trigger dispensation on a [cron schedule](https://pkg.go.dev/github.com/robfig/cron)
 
@@ -22,9 +24,10 @@ Automated cat feeder on RPi Zero W with Python.
 
 
 ## istream
-> stream video to RTMP URL, poorly
+> stream video to RTMP URL, poorly or serve timelapse stills
 
-* `RTMP_STREAM_URL` controls where to stream
+* `RTMP_STREAM_URL` controls where to stream; or
+* `ISTREAM_STILL` image name for timelapse (e.g. on `tmpfs`)
 * `H264_PROFILE` sets H.264 profile (e.g. main, baseline)
 * `VIDEO_{WIDTH,HEIGHT}` sets resolution
 * `VIDEO_{FRAMERATE,BITRATE}` sets video frame-rate and quality
