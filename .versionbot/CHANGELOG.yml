@@ -1,4 +1,16 @@
 - commits:
+    - subject: Snack schedule
+      hash: 9ae003e8633e125abc58a38ce968f843864dd90b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.21
+  title: ""
+  date: 2023-03-19T15:51:23.679Z
+- commits:
     - subject: Use Traefik to route HTTP requests
       hash: 934f8585b739eba9485a486850aaa7ec396306fe
       body: ""
