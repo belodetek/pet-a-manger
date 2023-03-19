@@ -19,7 +19,7 @@ logging.basicConfig(encoding='utf-8', level=level)
 def on_gpio_event(button, pwm, edge):
     try:
         if edge == None: edge = GPIO.input(button)
-        logging.debug(f'button: {button} pwm: {pwm} edge: {edge}')
+        logging.debug(f'button:{button} pwm:{pwm} edge:{edge}')
         # button released
         if edge == 0:
             pwm.ChangeDutyCycle(0)
@@ -38,9 +38,9 @@ def on_gpio_event(button, pwm, edge):
 
     return True
 
-def dispenser(pwms, signum, frame):
+def dispenser(pwms, runsecs, signum, frame):
     signame = signal.Signals(signum).name
-    logging.debug(f'signame: {signame} signum: {signum}: frame: {frame} pwms: {pwms}')
+    logging.debug(f'signame:{signame} signum:{signum}: frame:{frame} pwms:{pwms} runsecs:{runsecs}')
     for pwm in pwms:
         try:
             success = False
@@ -50,7 +50,7 @@ def dispenser(pwms, signum, frame):
             success = start and finish
             assert success
             r = requests.get(alert_reset_url)
-            logging.info(f'pwm: {pwm} dispensation: {success} url: {alert_reset_url} status_code: {r.status_code} headers: {r.headers} content: {r.content} text: {r.text}')
+            logging.info(f'pwm:{pwm} runsecs:{runsecs} dispensation:{success} url:{alert_reset_url} status_code:{r.status_code} headers:{r.headers} content:{r.content} text:{r.text}')
         except:
             logging.exception('catastrophy!')
             pwm.ChangeDutyCycle(0)
@@ -87,8 +87,9 @@ if __name__ == '__main__':
         GPIO.add_event_detect(button1, GPIO.BOTH, callback=lambda x: on_gpio_event(button1, pwm1, None), bouncetime=bounce_time)
         GPIO.add_event_detect(button2, GPIO.BOTH, callback=lambda x: on_gpio_event(button2, pwm2, None), bouncetime=bounce_time)
 
-        # dispense on SIGUSR2
-        signal.signal(signal.SIGUSR2, partial(dispenser, pwms))
+        # dispense on SIGUSR signals
+        signal.signal(signal.SIGUSR1, partial(dispenser, pwms, runsecs_snack))
+        signal.signal(signal.SIGUSR2, partial(dispenser, pwms, runsecs_meal))
 
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
