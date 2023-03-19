@@ -19,7 +19,7 @@ Automated cat feeder on RPi Zero W with Python.
 ## ifeed
 > dispense on `GPIO` or `SIGUSR2` events
 
-* `IFEED_RUNSECS` controls dispensation duration on `USR2` event
+* `IFEED_{MEAL,SNACK}_RUNSECS` controls dispensation duration in seconds on SIGUSR* events
 * `IFEED_BUTTON{1,2}_GPIO` sets button pins (physical board [pin numbering scheme](https://pinout.xyz/))
 * `IFEED_PWM{1,2}_GPIO` sets servo motor pins
 
