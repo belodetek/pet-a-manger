@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix conversions
+      hash: 843397d74b549c82d87fa3815266b0ad21b9e21a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: black.box
+      nested: []
+  version: 0.0.22
+  title: ""
+  date: 2023-03-19T19:10:33.817Z
+- commits:
     - subject: Snack schedule
       hash: 9ae003e8633e125abc58a38ce968f843864dd90b
       body: ""
