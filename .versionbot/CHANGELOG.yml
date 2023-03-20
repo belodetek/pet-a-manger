@@ -1,4 +1,16 @@
 - commits:
+    - subject: iwait health check
+      hash: 4df0915ed02f8543b226938f69884711559408cb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.24
+  title: ""
+  date: 2023-03-20T03:59:07.356Z
+- commits:
     - subject: Update docs
       hash: 8a90c50c7e65033aedb9d71f6158aadd6fef6271
       body: ""
