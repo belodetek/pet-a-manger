@@ -3,6 +3,7 @@ import os
 level = os.getenv('LOG_LEVEL', 'INFO')
 tz = os.getenv('TZ', 'US/Pacific')
 date_format = os.getenv('DATE_FORMAT', '%H:%M %Z')
+gpio_warnings = bool(int(os.getenv('GPIO_WARNINGS', '0')))
 
 # 1,000,000us / 50Hz = 20,000us
 pwm_frequency = int(os.getenv('IFEED_PWM_FREQ', '50'))

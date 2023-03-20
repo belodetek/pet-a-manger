@@ -11,7 +11,7 @@ x-common: &common
 
 services:
   iserve:
-    image: traefik:v2.9
+    image: arm32v6/traefik:v2.9
     command:
       - --accesslog=true
       - --entrypoints.web.address=:80
@@ -34,6 +34,7 @@ services:
       test: |
         name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')" \
           && grep -q ${name} /etc/ofelia.conf
+          && pgrep ofelia
 
       interval: 60s
       timeout: 15s
@@ -63,6 +64,13 @@ services:
 
         exec ./main.py
 
+    healthcheck:
+      test: pgrep python3.10
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
+
     devices:
       - /dev/gpiomem
       - /dev/mem
@@ -88,33 +96,35 @@ services:
         }
         trap cleanup EXIT
 
-        H264_PROFILE=${H264_PROFILE:-main}
-        VIDEO_WIDTH=${VIDEO_WIDTH:-320}
-        VIDEO_HEIGHT=${VIDEO_HEIGHT:-192}
-        VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-15}
-        VIDEO_BITRATE=${VIDEO_BITRATE:-250000}
-        KEYFRAME_RATE=${KEYFRAME_RATE:-30}
-
-        # audio not used
-        AUDIO_SAMPLE_RATE=${AUDIO_SAMPLE_RATE:-44100}
+        ISTREAM_H264_PROFILE=${H264_PROFILE:-main}
+        ISTREAM_VIDEO_WIDTH=${VIDEO_WIDTH:-320}
+        ISTREAM_VIDEO_HEIGHT=${VIDEO_HEIGHT:-192}
+        ISTREAM_VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-15}
+        ISTREAM_VIDEO_BITRATE=${VIDEO_BITRATE:-250000}
+        ISTREAM_KEYFRAME_RATE=${KEYFRAME_RATE:-30}
+        ISTREAM_AUDIO_SAMPLE_RATE=${ISTREAM_AUDIO_SAMPLE_RATE:-44100}  # audio not used
+        ISTREAM_IMAGE_HEIGHT=${ISTREAM_IMAGE_HEIGHT:-1280}
+        ISTREAM_IMAGE_WIDTH=${ISTREAM_IMAGE_WIDTH:-960}
+        ISTREAM_IMAGE_ROTATE=${ISTREAM_IMAGE_ROTATE:-90}
+        ISTREAM_IMAGE_ANNOTATE=${ISTREAM_IMAGE_ANNOTATE:-1024}
 
         # https://medium.com/@allanlei/streaming-your-raspberrypi-camera-6ad02edcaae7
-        if [[ -n "$RTMP_STREAM_URL" ]]; then
+        if [[ -n "$ISTREAM_RTMP_URL" ]]; then
             exec raspivid -n -t 0 -fl -hf -o - \
-              -w "${VIDEO_WIDTH}" \
-              -h "${VIDEO_HEIGHT}" \
-              -fps "${VIDEO_FRAMERATE}" \
-              -b "${VIDEO_BITRATE}" \
-              -pf "${H264_PROFILE}" \
-              -g "${KEYFRAME_RATE}" \
+              -w "${ISTREAM_VIDEO_WIDTH}" \
+              -h "${ISTREAM_VIDEO_HEIGHT}" \
+              -fps "${ISTREAM_VIDEO_FRAMERATE}" \
+              -b "${ISTREAM_VIDEO_BITRATE}" \
+              -pf "${ISTREAM_H264_PROFILE}" \
+              -g "${ISTREAM_KEYFRAME_RATE}" \
               | ffmpeg \
               -f lavfi \
-              -i "anullsrc=channel_layout=stereo:sample_rate=${AUDIO_SAMPLE_RATE}" \
+              -i "anullsrc=channel_layout=stereo:sample_rate=${ISTREAM_AUDIO_SAMPLE_RATE}" \
               -i pipe:0 \
               -c:v copy \
               -c:a aac \
               -strict experimental \
-              -f flv "${RTMP_STREAM_URL}"
+              -f flv "${ISTREAM_RTMP_URL}"
 
         # capture and serve stills
         elif [[ -n "$ISTREAM_STILL" ]]; then
@@ -122,9 +132,14 @@ services:
             test -f "${webroot}/favicon.ico" || ln -s /root/favicon.ico ${webroot}/favicon.ico
             nweb 80 "${webroot}"
             pgrep nweb
+            raspistill --settings
             while true; do
                 raspistill --verbose --nopreview \
                   --output "${ISTREAM_STILL}" \
+                  --width "${ISTREAM_IMAGE_WIDTH}" \
+                  --height "${ISTREAM_IMAGE_HEIGHT}" \
+                  --rotation "${ISTREAM_IMAGE_ROTATE}" \
+                  --annotate "${ISTREAM_IMAGE_ANNOTATE}" \
                   --timelapse 60000 \
                   --timeout 3600000
             done
