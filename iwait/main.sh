@@ -3,7 +3,7 @@
 set -axe
 
 function cleanup() {
-    rm -f "${globconfig}" "${jobconfig}" "${config}"
+    rm -f "${globconfig}" "${jobconfig}" /etc/ofelia.conf
     sleep infinity
 }
 trap cleanup EXIT
@@ -17,7 +17,6 @@ name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')"
 
 globconfig="$(mktemp)"
 jobconfig="$(mktemp)"
-config="$(mktemp)"
 
 cat << EOF > "${globconfig}"
 [global]
@@ -41,17 +40,13 @@ command = /bin/bash -c 'pgrep python3.10 | xargs kill -s USR1'
 schedule = ${IFEED_SNACK_SCHEDULE2}
 container = ${name}
 command = /bin/bash -c 'pgrep python3.10 | xargs kill -s USR1'
-
-[job-local "self-immolate"]
-schedule = @every 15m
-command = kill -s SIGTERM 1
 EOF
 
 if [[ -n "$IFEED_SLACK_WEBHOOK_URL" ]]; then
-    cat < "${globconfig}" > "${config}"
+    cat < "${globconfig}" > /etc/ofelia.conf
 fi
-cat < "${globconfig}" > "${config}"
-cat < "${jobconfig}" >> "${config}"
-cat < "${config}"
+cat < "${globconfig}" > /etc/ofelia.conf
+cat < "${jobconfig}" >> /etc/ofelia.conf
+cat < /etc/ofelia.conf
 
-exec ofelia daemon --config="${config}"
+exec ofelia daemon

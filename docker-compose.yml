@@ -30,6 +30,15 @@ services:
       context: iwait
     depends_on:
       - ifeed
+    healthcheck:
+      test: |
+        name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')" \
+          && grep -q ${name} /etc/ofelia.conf
+
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
     <<: *common
     restart: always
     labels:
