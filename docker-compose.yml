@@ -33,7 +33,7 @@ services:
     healthcheck:
       test: |
         name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')" \
-          && grep -q ${name} /etc/ofelia.conf
+          && grep -q ${name} /etc/ofelia.conf \
           && pgrep ofelia
 
       interval: 60s
