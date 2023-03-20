@@ -1,4 +1,15 @@
 - commits:
+    - subject: Fix syntax
+      hash: da4e6957b9f1a89d1262ef2f002098ecdf57b00c
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.31
+  title: ""
+  date: 2023-03-20T23:19:28.210Z
+- commits:
     - subject: image lock arm/v6 arch hash
       hash: bc05aa8dfbed3a92e151ea9b5fabc1dd6ee253fd
       body: ""
