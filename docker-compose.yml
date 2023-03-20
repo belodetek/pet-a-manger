@@ -163,19 +163,23 @@ services:
         }
         trap cleanup EXIT
 
+        if [[ -z $IWATCH_REDIRECT_URL ]] && [[ -n $ISTREAM_STILL ]];
+            IWATCH_REDIRECT_URL="https://${BALENA_DEVICE_UUID}.balena-devices.com/$(basename "${ISTREAM_STILL}")"
+        fi
+
         # serve static HTML
         # https://funprojects.blog/2021/04/11/a-web-server-in-1-line-of-bash/
-        if [[ -n "$IWATCH_HTML" ]]; then
-            echo "${IWATCH_HTML}" > iwatch.html
+        if [[ -n "$IWATCH_STATIC_HTML" ]]; then
+            echo "${IWATCH_STATIC_HTML}" > iwatch.html
             while true; do
                 echo -e 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n' \
                   | cat - iwatch.html | nc -l -p 8080 -q 0; sleep 1s;
             done
 
         # .. or serve HTTP redirect
-        elif [[ -n "$IWATCH_URL" ]]; then
+        elif [[ -n "$IWATCH_REDIRECT_URL" ]]; then
             while true; do
-                echo -e "HTTP/1.1 302 Found\r\nLocation: ${IWATCH_URL}\r\nConnection: close\r\n\r\n" \
+                echo -e "HTTP/1.1 302 Found\r\nLocation: ${IWATCH_REDIRECT_URL}\r\nConnection: close\r\n\r\n" \
                   | nc -l -p 80 -q 0; sleep 1s;
             done
 

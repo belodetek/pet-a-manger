@@ -39,5 +39,5 @@ Automated cat feeder on RPi Zero W with Python.
 ## iwatch
 > simple HTTP redirect with `netcat` or static HTML
 
-* `IWATCH_HTML` controls static HTML content (e.g. YouTube iframe/embed)
-* `IWATCH_URL` controls redirect URL if no static HTML specified
+* `IWATCH_STATIC_HTML` controls static HTML content (e.g. YouTube iframe/embed)
+* `IWATCH_REDIRECT_URL` controls redirect URL if no static HTML specified
