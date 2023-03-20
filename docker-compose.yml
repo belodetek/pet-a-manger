@@ -163,7 +163,7 @@ services:
         }
         trap cleanup EXIT
 
-        if [[ -z $IWATCH_REDIRECT_URL ]] && [[ -n $ISTREAM_STILL ]];
+        if [[ -z "$IWATCH_REDIRECT_URL" ]] && [[ -n "$ISTREAM_STILL" ]]; then
             IWATCH_REDIRECT_URL="https://${BALENA_DEVICE_UUID}.balena-devices.com/$(basename "${ISTREAM_STILL}")"
         fi
 
