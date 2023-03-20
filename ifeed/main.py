@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 import signal
 import sys
 
-logging.basicConfig(encoding='utf-8', level=level)
+logging.basicConfig(format='%(asctime)s - %(message)s', encoding='utf-8', level=level)
 
 # https://raspberrypihq.com/use-a-push-button-with-raspberry-pi-gpio/
 def on_gpio_event(button, pwm, edge):
