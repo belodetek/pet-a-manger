@@ -1,4 +1,16 @@
 - commits:
+    - subject: Log timestamps
+      hash: 963ea6296f5e9a851b28b9d0e3cf0c4a6620fb59
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.25
+  title: ""
+  date: 2023-03-20T15:46:04.619Z
+- commits:
     - subject: iwait health check
       hash: 4df0915ed02f8543b226938f69884711559408cb
       body: ""
