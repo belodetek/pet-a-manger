@@ -1,4 +1,16 @@
 - commits:
+    - subject: Frame build images
+      hash: 3d27df8f35f1ed3ae54087cbd5d108eaefd16ad0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.26
+  title: ""
+  date: 2023-03-20T16:20:37.317Z
+- commits:
     - subject: Log timestamps
       hash: 963ea6296f5e9a851b28b9d0e3cf0c4a6620fb59
       body: ""
