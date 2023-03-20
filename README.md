@@ -1,7 +1,7 @@
 # pet-a-manger
 > 🐈‍⬛🐈‍⬛ iwait, ifeed, istream while iwatch...
 
-Automated cat feeder on RPi Zero W with Python.
+Automated cat feeder, optimised for RPi Zero W.
 
 [![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/belodetek/pet-a-manger)
 
@@ -11,29 +11,26 @@ Automated cat feeder on RPi Zero W with Python.
 * `IFEED_MEAL_SCHEDULE` controls cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
 * `IFEED_SNACK_SCHEDULE{1,2}` controls cron (snack) schedules
 * `TZ` sets timezone (e.g. `US/Pacific`)
-* `IFEED_SLACK_WEBHOOK_URL` controls where scheduling errors go in Slack
-* `IFEED_SLACK_ERRORS_ONLY` controls Slack logging verbosity (e.g. `true` or `false`)
+* `IFEED_SLACK_{WEBHOOK_URL.ERRORS_ONLY}` controls Slack integration parameters
 * `IFEED_HEARTBEAT_URL` send an empty HTTP request to [reset alert trigger](https://healthchecks.io/)
 
 
 ## ifeed
-> dispense on `GPIO` (physical buttons or momentary switches) or `SIGUSR{1,2}` Linux signals
+> dispense on `GPIO` (physical push buttons) or `USR{1,2}` Linux signals
 
-* `IFEED_{MEAL,SNACK}_RUNSECS` controls dispensation duration in seconds on `SIGUSR{1,2}` events
+* `IFEED_{MEAL,SNACK}_RUNSECS` controls dispensation duration in seconds on `USR{1,2}` events
 * `IFEED_BUTTON{1,2}_GPIO` sets button pins (physical board [pin numbering scheme](https://pinout.xyz/))
 * `IFEED_PWM{1,2}_GPIO` sets servo motor pins
 
 
 ## istream
-> stream video to RTMP sink (poorly on RPi Zero W) or serve timelapse stills (better)
+> stream video to RTMP sink (poorly on RPi Zero W) or serve timelapse stills (better) with `nweb`
 
-* `RTMP_STREAM_URL` controls where to stream (e.g. YouTube, Restream, etc.); or
-* `ISTREAM_STILL` image name for timelapse (e.g. on `tmpfs`)
-* `H264_PROFILE` sets H.264 profile (e.g. main, baseline, etc.)
-* `VIDEO_{WIDTH,HEIGHT}` sets resolution
-* `VIDEO_{FRAMERATE,BITRATE}` sets video frame-rate and quality
-* `KEYFRAME_RATE` sets control frame every X video rates
-* `AUDIO_SAMPLE_RATE` sets empty audio stream bitrate
+* `ISTREAM_RTMP_URL` controls where `raspivid` streams to (e.g. YouTube, Restream, etc.); **or**
+* `ISTREAM_STILL` image name for `raspistill` timelapse (e.g. somewhere on `tmpfs` ideally)
+* `ISTREAM_VIDEO_{H264_PROFILE,WIDTH,HEIGHT,FRAMERATE,BITRATE,KEYFRAME}` sets video parameters
+* `ISTREAM_AUDIO_SAMPLE_RATE` (ffmpeg) sets empty audio stream bitrate
+* `ISTREAM_IMAGE_{WIDTH,HEIGHT,ROTATE,ANNOTATE}` still image parameters
 
 
 ## iwatch

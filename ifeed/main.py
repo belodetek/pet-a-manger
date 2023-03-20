@@ -40,7 +40,7 @@ def on_gpio_event(button, pwm, edge):
 
 def dispenser(pwms, runsecs, signum, frame):
     signame = signal.Signals(signum).name
-    logging.debug(f'signame:{signame} signum:{signum}: frame:{frame} pwms:{pwms} runsecs:{runsecs}')
+    logging.debug(f'signame:{signame} signum:{signum} frame:{frame} pwms:{pwms} runsecs:{runsecs}')
     for pwm in pwms:
         try:
             success = False
@@ -49,8 +49,9 @@ def dispenser(pwms, runsecs, signum, frame):
             finish = on_gpio_event(signum, pwm, 0)
             success = start and finish
             assert success
+            # FIXME: reset trigger on meals only
             r = requests.get(alert_reset_url)
-            logging.info(f'pwm:{pwm} runsecs:{runsecs} dispensation:{success} url:{alert_reset_url} status_code:{r.status_code} headers:{r.headers} content:{r.content} text:{r.text}')
+            logging.info(f'pwm:{pwm} signum:{signum} runsecs:{runsecs} dispensation:{success} url:{alert_reset_url} status_code:{r.status_code} headers:{r.headers} content:{r.content} text:{r.text}')
         except:
             logging.exception('catastrophy!')
             pwm.ChangeDutyCycle(0)
@@ -68,6 +69,8 @@ async def main():
 
 if __name__ == '__main__':
     try:
+        GPIO.setwarnings(gpio_warnings)
+
         # physical pin numbering scheme: https://i.stack.imgur.com/yHddo.png
         GPIO.setmode(GPIO.BOARD)
 
