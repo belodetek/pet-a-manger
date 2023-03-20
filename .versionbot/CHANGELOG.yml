@@ -1,4 +1,15 @@
 - commits:
+    - subject: image lock arm/v6 arch hash
+      hash: bc05aa8dfbed3a92e151ea9b5fabc1dd6ee253fd
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.30
+  title: ""
+  date: 2023-03-20T22:58:46.673Z
+- commits:
     - subject: set still image parameters
       hash: 8befb00dbeb2a2265e4dea2f50c165a34e7010c3
       body: ""
