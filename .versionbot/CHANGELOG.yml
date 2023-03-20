@@ -1,4 +1,15 @@
 - commits:
+    - subject: fix syntax
+      hash: 1faee5fe96bb6c9ac80d1e8eedce0ff8a770b716
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.28
+  title: ""
+  date: 2023-03-20T17:58:10.698Z
+- commits:
     - subject: Automatically redirect to still
       hash: 3bc051f723b33ea783194346bfc44b1b6f0f8fd0
       body: ""
