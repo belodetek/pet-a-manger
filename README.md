@@ -5,7 +5,7 @@ Automated cat feeder on RPi Zero W with Python.
 
 [![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/belodetek/pet-a-manger)
 
-## iwait
+## [iwait](https://github.com/mcuadros/ofelia)
 > trigger dispensation on a [cron schedule](https://pkg.go.dev/github.com/robfig/cron)
 
 * `IFEED_MEAL_SCHEDULE` controls cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
@@ -17,19 +17,19 @@ Automated cat feeder on RPi Zero W with Python.
 
 
 ## ifeed
-> dispense on `GPIO` or `SIGUSR2` events
+> dispense on `GPIO` (physical buttons or momentary switches) or `SIGUSR{1,2}` Linux signals
 
-* `IFEED_{MEAL,SNACK}_RUNSECS` controls dispensation duration in seconds on SIGUSR* events
+* `IFEED_{MEAL,SNACK}_RUNSECS` controls dispensation duration in seconds on `SIGUSR{1,2}` events
 * `IFEED_BUTTON{1,2}_GPIO` sets button pins (physical board [pin numbering scheme](https://pinout.xyz/))
 * `IFEED_PWM{1,2}_GPIO` sets servo motor pins
 
 
 ## istream
-> stream video to RTMP URL, poorly or serve timelapse stills
+> stream video to RTMP sink (poorly on RPi Zero W) or serve timelapse stills (better)
 
-* `RTMP_STREAM_URL` controls where to stream; or
+* `RTMP_STREAM_URL` controls where to stream (e.g. YouTube, Restream, etc.); or
 * `ISTREAM_STILL` image name for timelapse (e.g. on `tmpfs`)
-* `H264_PROFILE` sets H.264 profile (e.g. main, baseline)
+* `H264_PROFILE` sets H.264 profile (e.g. main, baseline, etc.)
 * `VIDEO_{WIDTH,HEIGHT}` sets resolution
 * `VIDEO_{FRAMERATE,BITRATE}` sets video frame-rate and quality
 * `KEYFRAME_RATE` sets control frame every X video rates
@@ -37,7 +37,7 @@ Automated cat feeder on RPi Zero W with Python.
 
 
 ## iwatch
-> simple HTTP redirect or static HTML
+> simple HTTP redirect with `netcat` or static HTML
 
-* `IWATCH_HTML` controls static HTML content (e.g. iframe/embed)
+* `IWATCH_HTML` controls static HTML content (e.g. YouTube iframe/embed)
 * `IWATCH_URL` controls redirect URL if no static HTML specified
