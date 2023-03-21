@@ -1,4 +1,15 @@
 - commits:
+    - subject: Update flowzone.yml
+      hash: 8406cecf57512f23b94d6ae83589c10679ded8cd
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.34
+  title: ""
+  date: 2023-03-21T20:56:13.284Z
+- commits:
     - subject: Reset trigger on specific events
       hash: 2914a0578be0b386c0166b0dec8ee2501cc51982
       body: ""
