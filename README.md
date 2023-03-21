@@ -8,11 +8,10 @@ Automated cat feeder, optimised for RPi Zero W.
 ## [iwait](https://github.com/mcuadros/ofelia)
 > trigger dispensation on a [cron schedule](https://pkg.go.dev/github.com/robfig/cron)
 
-* `IFEED_MEAL_SCHEDULE` controls cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
-* `IFEED_SNACK_SCHEDULE{1,2}` controls cron (snack) schedules
+* `IWAIT_MEAL_SCHEDULE` controls cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
+* `IWAIT_SNACK_SCHEDULE{1,2}` controls cron (snack) schedules
 * `TZ` sets timezone (e.g. `US/Pacific`)
-* `IFEED_SLACK_{WEBHOOK_URL.ERRORS_ONLY}` controls Slack integration parameters
-* `IFEED_HEARTBEAT_URL` send an empty HTTP request to [reset alert trigger](https://healthchecks.io/)
+* `IWAIT_SLACK_{WEBHOOK_URL.ERRORS_ONLY}` controls Slack integration parameters
 
 
 ## ifeed
@@ -21,6 +20,8 @@ Automated cat feeder, optimised for RPi Zero W.
 * `IFEED_{MEAL,SNACK}_RUNSECS` controls dispensation duration in seconds on `USR{1,2}` events
 * `IFEED_BUTTON{1,2}_GPIO` sets button pins (physical board [pin numbering scheme](https://pinout.xyz/))
 * `IFEED_PWM{1,2}_GPIO` sets servo motor pins
+* `IFEED_HEARTBEAT_URL` send an empty HTTP request to [reset alert trigger](https://healthchecks.io/)
+* `IFEED_ALERT_RESET_SIGNALS` reset trigger on specific signals only
 
 
 ## istream

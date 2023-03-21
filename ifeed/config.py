@@ -27,3 +27,5 @@ dispenser2 = int(os.getenv('IFEED_PWM2_GPIO', '7'))
 runsecs_meal = float(os.getenv('IFEED_MEAL_RUNSECS', '1.0'))
 runsecs_snack = float(os.getenv('IFEED_SNACK_RUNSECS', '0.1'))
 alert_reset_url = os.getenv('IFEED_HEARTBEAT_URL')
+# int(signal.SIGUSR2)
+alert_reset_signals = [int(s) for s in os.getenv('IFEED_ALERT_RESET_SIGNALS', '12').split(',')]
