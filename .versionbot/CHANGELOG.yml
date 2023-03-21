@@ -1,4 +1,15 @@
 - commits:
+    - subject: Traefik health check
+      hash: 9e2c31d94481d38ee277c27b70d2a8a84a3d07ef
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.32
+  title: ""
+  date: 2023-03-21T00:02:59.011Z
+- commits:
     - subject: Fix syntax
       hash: da4e6957b9f1a89d1262ef2f002098ecdf57b00c
       body: ""
