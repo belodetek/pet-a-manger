@@ -16,9 +16,16 @@ services:
       - --accesslog=true
       - --entrypoints.web.address=:80
       - --log.level=DEBUG
+      - --ping=true
       - --providers.docker.endpoint=unix:///var/run/balena.sock
       - --providers.docker.exposedbydefault=false
       - --providers.docker=true
+    healthcheck:
+      test: wget -qO /dev/null localhost:8080/ping
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
     ports:
       - "80:80"
     labels:
