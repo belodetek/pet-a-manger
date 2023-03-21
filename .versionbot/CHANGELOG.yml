@@ -1,4 +1,15 @@
 - commits:
+    - subject: Reset trigger on specific events
+      hash: 2914a0578be0b386c0166b0dec8ee2501cc51982
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.33
+  title: ""
+  date: 2023-03-21T15:10:33.805Z
+- commits:
     - subject: Traefik health check
       hash: 9e2c31d94481d38ee277c27b70d2a8a84a3d07ef
       body: ""
