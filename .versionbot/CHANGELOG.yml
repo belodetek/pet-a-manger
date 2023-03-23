@@ -1,4 +1,15 @@
 - commits:
+    - subject: refactor schedules and light init
+      hash: 00ce66e5bce0bf4542aaa079476fd1f3ddd45a76
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.35
+  title: ""
+  date: 2023-03-23T01:12:58.613Z
+- commits:
     - subject: Update flowzone.yml
       hash: 8406cecf57512f23b94d6ae83589c10679ded8cd
       body: ""
