@@ -1,4 +1,15 @@
 - commits:
+    - subject: validate cron config
+      hash: d9af2d0d299abd871e26e5b0a5e4c4e1f5bae10c
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.40
+  title: ""
+  date: 2023-03-23T22:55:51.058Z
+- commits:
     - subject: fix container name
       hash: 923b86bdb4a502f57b9cec1b3368f3e80d721ba0
       body: ""
