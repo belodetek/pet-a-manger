@@ -57,7 +57,7 @@ def dispenser(pwms, runsecs, signum, frame):
             pwm.ChangeDutyCycle(0)
             sleep(0.1)
 
-def toggle_light(init=0):
+def toggle_light():
     state = bool(int(GPIO.input(light_switch)))
     for s in [not state, state]:
         GPIO.output(light_switch, int(s))
@@ -90,8 +90,6 @@ if __name__ == '__main__':
 
         # light trigger
         GPIO.setup(light_switch, GPIO.OUT)
-        light_init = GPIO.input(light_switch)
-        logging.debug(f'light_switch:{light_switch} light_init:{light_init}')
 
         pwm1 = GPIO.PWM(dispenser1, pwm_frequency)
         pwm2 = GPIO.PWM(dispenser2, pwm_frequency)
