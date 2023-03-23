@@ -1,4 +1,15 @@
 - commits:
+    - subject: correct env var
+      hash: 746c6506e7370f0a3f3eb031ede60426592fcf88
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.38
+  title: ""
+  date: 2023-03-23T04:18:32.952Z
+- commits:
     - subject: fix cron config
       hash: 6b80bd65f391501f040fe0d5199935b14a367442
       body: ""
