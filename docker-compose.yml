@@ -37,12 +37,12 @@ services:
       context: iwait
     depends_on:
       - ifeed
+    entrypoint:
+      - /bin/sh
+      - -c
+    command: /usr/src/app/main.sh
     healthcheck:
-      test: |
-        name="$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')" \
-          && grep -q ${name} /etc/ofelia.conf \
-          && pgrep ofelia
-
+      test: grep -q "$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')" /etc/ofelia.conf && pgrep ofelia
       interval: 60s
       timeout: 15s
       retries: 3

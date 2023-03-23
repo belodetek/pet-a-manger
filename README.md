@@ -9,7 +9,7 @@ Automated cat feeder, optimised for RPi Zero W.
 > trigger dispensation on a [cron schedule](https://pkg.go.dev/github.com/robfig/cron)
 
 * `IWAIT_MEAL_SCHEDULE` controls cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
-* `IWAIT_SNACK_SCHEDULE{1,2}` controls cron (snack) schedules
+* `IWAIT_SNACK_SCHEDULES` controls cron (snack) schedules
 * `TZ` sets timezone (e.g. `US/Pacific`)
 * `IWAIT_SLACK_{WEBHOOK_URL.ERRORS_ONLY}` controls Slack integration parameters
 
