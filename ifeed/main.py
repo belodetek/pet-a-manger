@@ -57,6 +57,12 @@ def dispenser(pwms, runsecs, signum, frame):
             pwm.ChangeDutyCycle(0)
             sleep(0.1)
 
+def toggle_light(init=0):
+    state = bool(int(GPIO.input(light_switch)))
+    for s in [not state, state]:
+        GPIO.output(light_switch, int(s))
+        sleep(0.1)
+
 async def main():
     while True:
         utc_time = datetime.now(tz=pytz.utc)
@@ -81,6 +87,11 @@ if __name__ == '__main__':
         # servo motors
         GPIO.setup(dispenser1, GPIO.OUT)
         GPIO.setup(dispenser2, GPIO.OUT)
+
+        # light trigger
+        GPIO.setup(light_switch, GPIO.OUT)
+        light_init = GPIO.input(light_switch)
+        logging.debug(f'light_switch:{light_switch} light_init:{light_init}')
 
         pwm1 = GPIO.PWM(dispenser1, pwm_frequency)
         pwm2 = GPIO.PWM(dispenser2, pwm_frequency)
