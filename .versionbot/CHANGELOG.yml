@@ -1,4 +1,15 @@
 - commits:
+    - subject: fix container name
+      hash: 923b86bdb4a502f57b9cec1b3368f3e80d721ba0
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.39
+  title: ""
+  date: 2023-03-23T16:15:46.790Z
+- commits:
     - subject: correct env var
       hash: 746c6506e7370f0a3f3eb031ede60426592fcf88
       body: ""
