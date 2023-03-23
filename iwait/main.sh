@@ -13,7 +13,7 @@ IWAIT_MEAL_TRIGGER_CMD=${IWAIT_MEAL_TRIGGER_CMD:-/bin/bash -c \'pgrep python3.10
 IWAIT_SLACK_ERRORS_ONLY=${IWAIT_SLACK_ERRORS_ONLY:-true}
 # semicolon separated cron expressions with commas replacing spaces
 IWAIT_SNACK_SCHEDULES=${IWAIT_SNACK_SCHEDULES:-42,32,12,*,*,*;24,01,19,*,*,*}
-IWAIT_SNACK_TRIGGER_CMD=${IWAIT_MEAL_TRIGGER_CMD:-/bin/bash -c \'pgrep python3.10 | xargs kill -s USR1\'}
+IWAIT_SNACK_TRIGGER_CMD=${IWAIT_SNACK_TRIGGER_CMD:-/bin/bash -c \'pgrep python3.10 | xargs kill -s USR1\'}
 IWAIT_IFEED_CONTAINER_NAME=${IWAIT_IFEED_CONTAINER_NAME:-$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')}
 
 globconfig="$(mktemp)"
