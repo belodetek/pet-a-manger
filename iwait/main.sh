@@ -51,5 +51,6 @@ if [[ -n "$IWAIT_SLACK_WEBHOOK_URL" ]]; then
 fi
 cat < "${jobconfig}" >> /etc/ofelia.conf
 cat < /etc/ofelia.conf
+ofelia validate
 
 exec ofelia daemon
