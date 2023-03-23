@@ -1,4 +1,15 @@
 - commits:
+    - subject: fix cron config
+      hash: 6b80bd65f391501f040fe0d5199935b14a367442
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.37
+  title: ""
+  date: 2023-03-23T03:20:04.255Z
+- commits:
     - subject: refactor light switch
       hash: 25164d35749199c41bcf4d2cd04253d3819a99ee
       body: ""
