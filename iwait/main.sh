@@ -29,7 +29,7 @@ EOF
 cat << EOF > "${jobconfig}"
 [job-exec "ifeed"]
 schedule = ${IWAIT_MEAL_SCHEDULE}
-container = ${name}
+container = ${IWAIT_IFEED_CONTAINER_NAME}
 command = ${IWAIT_MEAL_TRIGGER_CMD}
 
 EOF
