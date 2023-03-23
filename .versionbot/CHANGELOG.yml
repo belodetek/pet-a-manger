@@ -1,4 +1,15 @@
 - commits:
+    - subject: refactor light switch
+      hash: 25164d35749199c41bcf4d2cd04253d3819a99ee
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.36
+  title: ""
+  date: 2023-03-23T01:20:20.413Z
+- commits:
     - subject: refactor schedules and light init
       hash: 00ce66e5bce0bf4542aaa079476fd1f3ddd45a76
       body: ""
