@@ -139,6 +139,14 @@ services:
             test -f "${webroot}/favicon.ico" || ln -s /root/favicon.ico ${webroot}/favicon.ico
             nweb 80 "${webroot}"
             pgrep nweb
+            (while true; do
+                # https://stackoverflow.com/a/52514730/1559300
+                # https://www.libvips.org/
+                if [[ -f "$ISTREAM_STILL" ]]; then
+                    vips avg "${ISTREAM_STILL}" | jq -rcs > "${ISTREAM_STILL}.json"
+                fi
+                sleep "$(((RANDOM%60)+60))s"
+            done) &
             raspistill --settings
             while true; do
                 raspistill --verbose --nopreview \
@@ -149,15 +157,17 @@ services:
                   --annotate "${ISTREAM_IMAGE_ANNOTATE}" \
                   --timelapse 60000 \
                   --timeout 3600000
-
-                # https://stackoverflow.com/a/52514730/1559300
-                # https://www.libvips.org/
-                vips avg "${ISTREAM_STILL}" | jq -rcs > "${ISTREAM_STILL}.json"
             done
         else
             false
         fi
 
+    healthcheck:
+      test: pgrep raspivid || pgrep raspistill
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
     devices:
       - /dev/vchiq
       - /dev/video0
@@ -170,7 +180,7 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.istream.entrypoints: 'web'
       # https://community.traefik.io/t/how-to-match-for-file-extension-at-end-of-path/16838/3
-      traefik.http.routers.istream.rule: 'Path(`/{path:(?i:.*\.(jpeg|jpg|png|json)$)}`)'
+      traefik.http.routers.istream.rule: 'Path(`/{path:(?i:.*\.(jpeg|jpg|png|json|ico)$)}`)'
       traefik.http.services.istream.loadbalancer.server.port: '80'
 
   iwatch:
@@ -189,34 +199,51 @@ services:
         }
         trap cleanup EXIT
 
+        # https://funprojects.blog/2021/04/11/a-web-server-in-1-line-of-bash/
+        (while true; do
+            json="$(docker ps --all --no-trunc --format="{{json .}}" | jq -rc '{Names, Status, State}' | jq -cs)"
+            echo -e "HTTP/1.1 200 OK\n\n${json}" \
+              | nc -l -k -p 8080 -q 3
+        done) &
+
         if [[ -z "$IWATCH_REDIRECT_URL" ]] && [[ -n "$ISTREAM_STILL" ]]; then
             IWATCH_REDIRECT_URL="https://${BALENA_DEVICE_UUID}.balena-devices.com/$(basename "${ISTREAM_STILL}")"
         fi
 
         # serve static HTML
-        # https://funprojects.blog/2021/04/11/a-web-server-in-1-line-of-bash/
         if [[ -n "$IWATCH_STATIC_HTML" ]]; then
             echo "${IWATCH_STATIC_HTML}" > iwatch.html
             while true; do
                 echo -e 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n' \
-                  | cat - iwatch.html | nc -l -p 8080 -q 0; sleep 1s;
+                  | cat - iwatch.html | nc -l -k -p 80 -q 1
             done
 
         # .. or serve HTTP redirect
         elif [[ -n "$IWATCH_REDIRECT_URL" ]]; then
             while true; do
                 echo -e "HTTP/1.1 302 Found\r\nLocation: ${IWATCH_REDIRECT_URL}\r\nConnection: close\r\n\r\n" \
-                  | nc -l -p 80 -q 0; sleep 1s;
+                  | nc -l -k -p 80 -q 1
             done
 
         else
             false
         fi
 
+    healthcheck:
+      test: pgrep nc
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
     labels:
+      io.balena.features.balena-socket: '1'
       io.balena.update.strategy: 'kill-then-download'
       traefik.enable: 'true'
-      traefik.http.routers.iwatch.entrypoints: 'web'
-      traefik.http.routers.iwatch.rule: 'Path(`/`)'
-      traefik.http.services.iwatch.loadbalancer.server.port: '80'
-
+      traefik.http.routers.iwatch1.entrypoints: 'web'
+      traefik.http.routers.iwatch1.service: 'iwatch1'
+      traefik.http.routers.iwatch1.rule: 'Path(`/`)'
+      traefik.http.services.iwatch1.loadbalancer.server.port: '80'
+      traefik.http.routers.iwatch2.entrypoints: 'web'
+      traefik.http.routers.iwatch2.service: 'iwatch2'
+      traefik.http.routers.iwatch2.rule: 'Path(`/health`)'
+      traefik.http.services.iwatch2.loadbalancer.server.port: '8080'

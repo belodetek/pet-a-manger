@@ -75,7 +75,7 @@ def get_img_avg():
     try:
         gw = get_default_gateway_linux()
         r = requests.get(f'http://{gw}/')
-        assert r.status_code == 200 and r.url
+        assert r.status_code == 200 and r.url.endswith('.png')
         img = ''.join(r.url.split('/')[-1:])
         r = requests.get(f'http://istream/{img}.json')
         assert r.status_code == 200 and r.json
@@ -88,22 +88,53 @@ def get_img_avg():
 def toggle_light():
     state = bool(int(GPIO.input(light_switch)))
     for s in [not state, state]:
+        sleep(0.1)
         GPIO.output(light_switch, int(s))
         sleep(0.1)
 
 async def main():
     imgs_vector = []
+    # https://stackoverflow.com/a/60728911/1559300
+    global lights
     while True:
         utc_time = datetime.now(tz=pytz.utc)
         local_time = utc_time.astimezone(pytz.timezone(tz))
-        if len(imgs_vector) >= 24: imgs_vector = []
-        imgs_vector.append(get_img_avg())
-        logging.info('utc_time: {} local_time: {} imgs_vector: {}'.format(
+        if len(imgs_vector) > max_samples: imgs_vector = imgs_vector[-max_samples:]
+        img_avg = get_img_avg()
+        if img_avg: imgs_vector.append(img_avg)
+        logging.info('utc_time: {} local_time: {} max_samples: {} len(imgs_vector): {} lights: {}'.format(
+            utc_time.strftime(date_format),
+            local_time.strftime(date_format),
+            max_samples,
+            len(imgs_vector),
+            lights
+        ))
+        logging.debug('utc_time: {} local_time: {} imgs_vector: {}'.format(
             utc_time.strftime(date_format),
             local_time.strftime(date_format),
             imgs_vector
         ))
-        await asyncio.sleep(3600)
+
+        # look at the last few samples to get brightness vector
+        if len(imgs_vector) >= max_samples:
+            sample_avg = sum(imgs_vector[-max_samples:]) / len(imgs_vector[-max_samples:])
+            ambient_light_low = sample_avg < img_avg_low
+            ambient_light_high = sample_avg >= img_avg_low
+            logging.debug(f'ambient_light_low: {ambient_light_low} ambient_light_high: {ambient_light_high} sample_avg: {sample_avg}')
+
+            # light has three modes ("on", "off" and "blink")
+            if ambient_light_low and lights <= 0:
+                toggle_light()
+                toggle_light()
+                lights = 1
+
+            # .. from "on", cycle twice to switch off
+            if ambient_light_high and lights >= 1:
+                toggle_light()
+                toggle_light()
+                lights = 0
+
+        await asyncio.sleep(log_interval)
 
 if __name__ == '__main__':
     try:
@@ -138,7 +169,7 @@ if __name__ == '__main__':
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
 
-    except Exception:
+    except:
         logging.exception('catastrophy!')
 
     finally:

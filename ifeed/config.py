@@ -1,4 +1,5 @@
 import os
+import math
 
 date_format = os.getenv('DATE_FORMAT', '%H:%M %Z')
 gpio_warnings = bool(int(os.getenv('GPIO_WARNINGS', '0')))
@@ -27,6 +28,10 @@ button1 = int(os.getenv('IFEED_BUTTON1_GPIO', '16'))
 button2 = int(os.getenv('IFEED_BUTTON2_GPIO', '22'))
 dispenser1 = int(os.getenv('IFEED_PWM1_GPIO', '3'))
 dispenser2 = int(os.getenv('IFEED_PWM2_GPIO', '7'))
+img_avg_low = float(os.getenv('IFEED_LIGHT_LOW_THRESHOLD', '60.0')) # average of all pixels values
 light_switch = int(os.getenv('IFEED_LIGHT_GPIO', '11'))
+lights = int(os.getenv('IFEED_LIGHT_STATUS', '1')) # initial light state (1 on; 0 off)
+log_interval = int(os.getenv('IFEED_LOG_INTERVAL_SECS', '60'))
+max_samples = int(os.getenv('IFEED_MAX_SAMPLES', math.ceil(3600 / log_interval * 24 / 100))) # keep ~ 1% of the last 24 hours worth of samples
 runsecs_meal = float(os.getenv('IFEED_MEAL_RUNSECS', '1.1'))
 runsecs_snack = float(os.getenv('IFEED_SNACK_RUNSECS', '0.2'))
