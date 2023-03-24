@@ -1,4 +1,15 @@
 - commits:
+    - subject: correct png info url
+      hash: 14739f81196724093baa6b8a977bb0a9ff04c3e3
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.43
+  title: ""
+  date: 2023-03-24T04:25:14.766Z
+- commits:
     - subject: update defaults
       hash: e89e56e352bbff90cdbc0358ed995a3e0f4137b3
       body: ""
