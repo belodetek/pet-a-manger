@@ -74,12 +74,12 @@ def get_img_avg():
     img_avg = False
     try:
         gw = get_default_gateway_linux()
-        r = requests.get(f'http://{gw}')
+        r = requests.get(f'http://{gw}/')
         assert r.status_code == 200 and r.url
         img = ''.join(r.url.split('/')[-1:])
-        r = requests.get(f'http://{gw}/{img}.json')
+        r = requests.get(f'http://istream/{img}.json')
         assert r.status_code == 200 and r.json
-        img_avg = float(r.json())
+        img_avg = float(r.json()[0])
         assert float(img_avg)
     except:
         pass
