@@ -149,6 +149,10 @@ services:
                   --annotate "${ISTREAM_IMAGE_ANNOTATE}" \
                   --timelapse 60000 \
                   --timeout 3600000
+
+                # https://stackoverflow.com/a/52514730/1559300
+                # https://www.libvips.org/
+                vips avg "${ISTREAM_STILL}" | jq -rcs > "${ISTREAM_STILL}.json"
             done
         else
             false
@@ -166,7 +170,7 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.istream.entrypoints: 'web'
       # https://community.traefik.io/t/how-to-match-for-file-extension-at-end-of-path/16838/3
-      traefik.http.routers.istream.rule: 'Path(`/{path:(?i:.*\.(jpeg|jpg|png)$)}`)'
+      traefik.http.routers.istream.rule: 'Path(`/{path:(?i:.*\.(jpeg|jpg|png|json)$)}`)'
       traefik.http.services.istream.loadbalancer.server.port: '80'
 
   iwatch:

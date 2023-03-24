@@ -11,6 +11,8 @@ import pytz
 import requests
 import RPi.GPIO as GPIO
 import signal
+import socket
+import struct
 import sys
 
 logging.basicConfig(format='%(asctime)s - %(message)s', encoding='utf-8', level=level)
@@ -57,6 +59,32 @@ def dispenser(pwms, runsecs, signum, frame):
             pwm.ChangeDutyCycle(0)
             sleep(0.1)
 
+# https://stackoverflow.com/a/6556951/1559300
+def get_default_gateway_linux():
+    """Read the default gateway directly from /proc."""
+    with open("/proc/net/route") as fh:
+        for line in fh:
+            fields = line.strip().split()
+            if fields[1] != '00000000' or not int(fields[3], 16) & 2:
+                # If not default route or not RTF_GATEWAY, skip it
+                continue
+            return socket.inet_ntoa(struct.pack("=L", int(fields[2], 16)))
+
+def get_img_avg():
+    img_avg = False
+    try:
+        gw = get_default_gateway_linux()
+        r = requests.get(f'http://{gw}')
+        assert r.status_code == 200 and r.url
+        img = ''.join(r.url.split('/')[-1:])
+        r = requests.get(f'http://{gw}/{img}.json')
+        assert r.status_code == 200 and r.json
+        img_avg = float(r.json())
+        assert float(img_avg)
+    except:
+        pass
+    return img_avg
+
 def toggle_light():
     state = bool(int(GPIO.input(light_switch)))
     for s in [not state, state]:
@@ -64,12 +92,16 @@ def toggle_light():
         sleep(0.1)
 
 async def main():
+    imgs_vector = []
     while True:
         utc_time = datetime.now(tz=pytz.utc)
         local_time = utc_time.astimezone(pytz.timezone(tz))
-        logging.info('utc_time: {} local_time: {}'.format(
+        if len(imgs_vector) >= 24: imgs_vector = []
+        imgs_vector.append(get_img_avg())
+        logging.info('utc_time: {} local_time: {} imgs_vector: {}'.format(
             utc_time.strftime(date_format),
             local_time.strftime(date_format),
+            imgs_vector
         ))
         await asyncio.sleep(3600)
 
