@@ -1,4 +1,15 @@
 - commits:
+    - subject: update defaults
+      hash: e89e56e352bbff90cdbc0358ed995a3e0f4137b3
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.42
+  title: ""
+  date: 2023-03-24T03:01:43.322Z
+- commits:
     - subject: collect image data
       hash: f1eb594e600c480c5aa7c6cc4a6884ee89710152
       body: ""
