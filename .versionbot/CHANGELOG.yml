@@ -1,4 +1,15 @@
 - commits:
+    - subject: collect image data
+      hash: f1eb594e600c480c5aa7c6cc4a6884ee89710152
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.41
+  title: ""
+  date: 2023-03-24T01:11:45.924Z
+- commits:
     - subject: validate cron config
       hash: d9af2d0d299abd871e26e5b0a5e4c4e1f5bae10c
       body: ""
