@@ -1,4 +1,15 @@
 - commits:
+    - subject: detect ambient light changes
+      hash: 2fb15f14f1e307dc3218531486c974f72ae5ddd5
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.44
+  title: ""
+  date: 2023-03-28T04:55:03.222Z
+- commits:
     - subject: correct png info url
       hash: 14739f81196724093baa6b8a977bb0a9ff04c3e3
       body: ""
