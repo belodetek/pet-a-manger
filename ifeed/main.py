@@ -85,12 +85,26 @@ def get_img_avg():
         pass
     return img_avg
 
-def toggle_light():
-    state = bool(int(GPIO.input(light_switch)))
-    for s in [not state, state]:
-        sleep(0.1)
-        GPIO.output(light_switch, int(s))
-        sleep(0.1)
+# FIXME: there has got to be a more elegant way..
+def toggle_light(lights):
+    if lights in [0]:
+        for shift in range(0,2):
+            state = bool(int(GPIO.input(light_switch)))
+            logging.debug(f'shift: {shift} state: {state}')
+            GPIO.output(light_switch, not state)
+            sleep(0.1)
+        return 1
+    elif lights in [1]:
+        for shift in range(0,4):
+            state = bool(int(GPIO.input(light_switch)))
+            logging.debug(f'shift: {shift} state: {state}')
+            GPIO.output(light_switch, not state)
+            sleep(0.1)
+        return 0
+    else:
+        # maybe blinking?
+        logging.debug(f'lights: {lights} state: {state}')
+    return lights
 
 async def main():
     imgs_vector = []
@@ -122,17 +136,11 @@ async def main():
             ambient_light_high = sample_avg >= img_avg_low
             logging.debug(f'ambient_light_low: {ambient_light_low} ambient_light_high: {ambient_light_high} sample_avg: {sample_avg}')
 
-            # light has three modes ("on", "off" and "blink")
             if ambient_light_low and lights <= 0:
-                toggle_light()
-                toggle_light()
-                lights = 1
+                lights = toggle_light(lights)
 
-            # .. from "on", cycle twice to switch off
             if ambient_light_high and lights >= 1:
-                toggle_light()
-                toggle_light()
-                lights = 0
+                lights = toggle_light(lights)
 
         await asyncio.sleep(log_interval)
 
