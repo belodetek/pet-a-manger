@@ -1,4 +1,15 @@
 - commits:
+    - subject: change to relative link
+      hash: cf0f2c3f6f010102b134da3ef76612256bfdbd30
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.47
+  title: ""
+  date: 2023-03-31T22:01:54.204Z
+- commits:
     - subject: Fastly CDN link
       hash: 58c41f08ac45c1365ad0920540064a0fa5f64a44
       body: ""
