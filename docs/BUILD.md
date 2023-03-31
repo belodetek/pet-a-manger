@@ -27,30 +27,34 @@ housed in an old dental floss box and secured under the slotted steel angle with
 tape. The light was the last minute addition, up-cycled from a bicycle light found on a
 street a decade or so ago.
 
-The main [ifeed] software is written in Python and held together with Bash scrips and
-"balenafied" Docker compose. Servos can be controlled by momentary switches as well as Linux `SIGUSR`
-signals. I used `USR1` for snack and `USR2` for meal. The only difference between the two
-is the amount of time the servos run, defined in [config.py]. The [iwait] scheduler execs
-into the `ifeed` container on a cron schedule and dispenses by sending an appropriate
-signal to the Python process. My [istream] solution can stream to an RTMP sink as well
-as take timelapse stills. Streaming on RPi Zero is marginal and doesn't leave enough
-compute to run the servos properly. I left it there as an option to use on higher powered
-devices, but for RPi Zero(s), I set `ISTREAM_STILL` environment variable instead.
+The main [ifeed] software is written in Python and held together with Bash scrips in a
+["balenafied" Docker compose]. Servos can be controlled by momentary switches as well as
+Linux `SIGUSR` signals. I used `USR1` for snack and `USR2` for meal. The only difference
+between the two is the amount of time the servos run, defined in [config.py]. The [iwait]
+scheduler execs into the `ifeed` container on a cron schedule and dispenses by sending an
+appropriate signal to the Python process.
 
-The solution is deployed to balenaCloud for convenience. Because `RPi Zero` is weak, I
+My [istream] solution can stream to an RTMP sink as well as take timelapse stills.
+Streaming on RPi Zero is marginal and doesn't leave enough compute to run the servos
+properly. I left it there as an option to use on higher powered devices, but for RPi
+Zero(s), I set `ISTREAM_STILL` environment variable instead.
+
+The composition is deployed to balenaCloud for convenience. Because `RPi Zero` is weak, I
 used a tiny `nweb` HTTP server, as well as `netcat` to serve images/pages and `Traefic`
-for reverse proxying it. Since balenaCloud offers public device URLs, HTTPS certificates
-are handled for me.
+for reverse proxying it. I also used Fastly to cache everything for 60s and provide TLS.
 
-[ifeed]: #ifeed "ifeed container service"
-[another]: https://github.com/balena-labs-projects/inkyshot
-[Zevro KCH-06139]: https://www.amazon.ca/KCH-06139-Indispensable-SmartSpace-Dry-Food-Dispenser/dp/B0009MGQUM
+![pet-a-manger](https://istream.belodetek.io/pet-a-manger.png)
+
 [12VDC 1/4" push-fit solenoid valve]: https://www.aliexpress.com/item/4000976038622.html
+[another]: https://github.com/balena-labs-projects/inkyshot
+[config.py]: https://github.com/belodetek/pet-a-manger/tree/master/ifeed/config.py "ifeed configuration"
+[ifeed]: https://github.com/belodetek/pet-a-manger/tree/master/ifeed "ifeed container service"
+[istream]: https://github.com/belodetek/pet-a-manger/tree/master/istream "ifeed container service"
+[images]: https://github.com/belodetek/pet-a-manger/tree/master/docs/images "link to images folder"
+["balenafied" Docker compose]: https://github.com/belodetek/pet-a-manger/tree/master/docker-compose.yml "balenafied composition"
+[iwait]: https://github.com/belodetek/pet-a-manger/tree/master/iwait/main.sh "iwait container service"
 [offset slotted steel angle]: https://www.canadiantire.ca/en/pdp/steelworks-plated-steel-offset-angle-adjustable-14-gauge-zinc-plated-assorted-sizes-0616198p.0616199.html
-[water level sensor relay board]: https://www.aliexpress.com/item/32978205921.html
-[images]: images
-[water sensor]: images/water-level-sensor.png "close up of the water sensor assembly"
-[config.py]: ifeed/config.py
-[iwait]: iwait/main.sh
-[istream]: docker-compose.yml "balenafied composition"
 [Servos]: https://www.aliexpress.com/item/1005003256573988.html
+[water level sensor relay board]: https://www.aliexpress.com/item/32978205921.html
+[water sensor]: https://github.com/belodetek/pet-a-manger/tree/master/docs/images/water-level-sensor.png "close up of the water sensor assembly"
+[Zevro KCH-06139]: https://www.amazon.ca/KCH-06139-Indispensable-SmartSpace-Dry-Food-Dispenser/dp/B0009MGQUM
