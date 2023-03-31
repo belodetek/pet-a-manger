@@ -1,4 +1,15 @@
 - commits:
+    - subject: Fastly CDN link
+      hash: 58c41f08ac45c1365ad0920540064a0fa5f64a44
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.46
+  title: ""
+  date: 2023-03-31T21:40:42.738Z
+- commits:
     - subject: bypass light blinking state
       hash: 168964bacd44a0775f769401de717f8686ee378c
       body: ""
