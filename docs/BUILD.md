@@ -40,7 +40,7 @@ properly. I left it there as an option to use on higher powered devices, but for
 Zero(s), I set `ISTREAM_STILL` environment variable instead.
 
 The composition is deployed to balenaCloud for convenience. Because `RPi Zero` is weak, I
-used a tiny `nweb` HTTP server, as well as `netcat` to serve images/pages and `Traefic`
+used a tiny `nweb` HTTP server, as well as `netcat` to serve images/pages and `Traefik`
 for reverse proxying it. I also used Fastly to cache everything for 60s and provide TLS.
 
 ![pet-a-manger](https://istream.belodetek.io/pet-a-manger.png)
