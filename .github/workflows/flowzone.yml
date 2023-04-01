@@ -35,4 +35,5 @@ jobs:
       balena_slugs: gh_ab77/pet-a-manger
       repo_config: true
       cloudflare_website: "pet-a-manger"
+      docusaurus_website: true
       repo_description: "Automated cat feeder on RPi Zero W with Python."
