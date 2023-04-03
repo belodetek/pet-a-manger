@@ -11,7 +11,7 @@ x-common: &common
 
 services:
   iserve:
-    image: arm32v6/traefik:v2.9
+    image: arm32v6/traefik@sha256:10b691b83d9ed9bac5ac8d7c37c79398bfec79e73c5b7882a6d6da069d3eb277
     command:
       - --accesslog=true
       - --entrypoints.web.address=:80
