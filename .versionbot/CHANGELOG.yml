@@ -1,4 +1,15 @@
 - commits:
+    - subject: add Google search metadata
+      hash: 068864200e160eba00233ce615039397a53fb1dc
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.48
+  title: ""
+  date: 2023-04-06T17:27:20.368Z
+- commits:
     - subject: change to relative link
       hash: cf0f2c3f6f010102b134da3ef76612256bfdbd30
       body: ""
