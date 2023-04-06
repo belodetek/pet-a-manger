@@ -1,4 +1,9 @@
 # pet-a-manger
+
+<head>
+  <meta name="google-site-verification" content="3dUMQhIoNee09W-bUaFKWruLzBBFWq4Wz5JrTroHr40" />
+</head>
+
 > 🐈‍⬛🐈‍⬛ iwait, ifeed, istream while iwatch...
 
 Opinionated cat feeder, [optimised for RPi Zero W] and [other materials on hand].
