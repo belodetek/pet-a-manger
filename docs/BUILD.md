@@ -1,6 +1,8 @@
 # build
 
-<meta name="google-site-verification" content="3dUMQhIoNee09W-bUaFKWruLzBBFWq4Wz5JrTroHr40" />
+<head>
+  <meta name="google-site-verification" content="3dUMQhIoNee09W-bUaFKWruLzBBFWq4Wz5JrTroHr40" />
+</head>
 
 > 🔩🛠️ brief notes on the build, optimised for junk/materials on hand..
 
