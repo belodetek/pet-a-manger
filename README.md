@@ -1,3 +1,5 @@
+<meta name="google-site-verification" content="3dUMQhIoNee09W-bUaFKWruLzBBFWq4Wz5JrTroHr40" />
+
 # pet-a-manger
 > 🐈‍⬛🐈‍⬛ iwait, ifeed, istream while iwatch...
 
