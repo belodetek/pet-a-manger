@@ -1,4 +1,7 @@
 # build
+
+<meta name="google-site-verification" content="3dUMQhIoNee09W-bUaFKWruLzBBFWq4Wz5JrTroHr40" />
+
 > 🔩🛠️ brief notes on the build, optimised for junk/materials on hand..
 
 The metal frame base was up-cycled from a junk treadmill and paired with galvanised (M8)
