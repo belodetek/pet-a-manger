@@ -1,4 +1,15 @@
 - commits:
+    - subject: preserve lights status
+      hash: 16af00b975c3bcfb9551d8349f3b515a9c1fe7df
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.49
+  title: ""
+  date: 2023-04-08T21:16:24.760Z
+- commits:
     - subject: add Google search metadata
       hash: 068864200e160eba00233ce615039397a53fb1dc
       body: ""
