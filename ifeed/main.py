@@ -183,3 +183,9 @@ if __name__ == '__main__':
     finally:
         GPIO.cleanup()
         loop.close()
+        try:
+            with open('/tmp/balena/.pet', 'w', encoding='utf-8') as f:
+                print(lights, file=f)
+                logging.debug(f'lights: {lights}')
+        except:
+            pass

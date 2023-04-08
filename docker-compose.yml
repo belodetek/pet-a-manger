@@ -65,12 +65,19 @@ services:
         set -axe
 
         function cleanup() {
+            # preserve lights status on exit
+            if [[ -f /tmp/balena/.pet ]] && [[ -d /balena ]]; then
+                cat < /tmp/balena/.pet > /balena/.pet
+                cat < /balena/.pet
+            fi
             sleep infinity
         }
         trap cleanup EXIT
 
         exec ./main.py
 
+    volumes:
+      - 'resin-data:/balena'
     healthcheck:
       test: pgrep python3.10
       interval: 60s
