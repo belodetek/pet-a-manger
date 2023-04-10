@@ -104,13 +104,13 @@ def toggle_light(lights):
     else:
         # maybe blinking?
         logging.debug(f'lights: {lights} state: {state}')
-	try:
-	    file = '/tmp/balena/.pet'
-		with open(file, 'w', encoding='utf-8') as f:
-			print(lights, file=f)
-			logging.debug(f'{file}: {lights}')
-	except:
-		pass
+    try:
+        file = '/tmp/balena/.pet'
+        with open(file, 'w', encoding='utf-8') as f:
+            print(lights, file=f)
+            logging.debug(f'{file}: {lights}')
+    except:
+        pass
     return lights
 
 async def main():
