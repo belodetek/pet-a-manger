@@ -1,4 +1,15 @@
 - commits:
+    - subject: fix indentation
+      hash: e2499be156bb984c4f783875129ee5ab322063ac
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.51
+  title: ""
+  date: 2023-04-10T03:42:37.596Z
+- commits:
     - subject: update every light switch
       hash: 4a8ec531bd6355f4b7215afd1430135e133f4abb
       body: ""
