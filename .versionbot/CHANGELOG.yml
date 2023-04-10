@@ -1,4 +1,15 @@
 - commits:
+    - subject: update every light switch
+      hash: 4a8ec531bd6355f4b7215afd1430135e133f4abb
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.50
+  title: ""
+  date: 2023-04-10T03:21:30.436Z
+- commits:
     - subject: preserve lights status
       hash: 16af00b975c3bcfb9551d8349f3b515a9c1fe7df
       body: ""
