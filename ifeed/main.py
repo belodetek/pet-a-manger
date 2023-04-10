@@ -104,6 +104,13 @@ def toggle_light(lights):
     else:
         # maybe blinking?
         logging.debug(f'lights: {lights} state: {state}')
+	try:
+	    file = '/tmp/balena/.pet'
+		with open(file, 'w', encoding='utf-8') as f:
+			print(lights, file=f)
+			logging.debug(f'{file}: {lights}')
+	except:
+		pass
     return lights
 
 async def main():
@@ -183,9 +190,3 @@ if __name__ == '__main__':
     finally:
         GPIO.cleanup()
         loop.close()
-        try:
-            with open('/tmp/balena/.pet', 'w', encoding='utf-8') as f:
-                print(lights, file=f)
-                logging.debug(f'lights: {lights}')
-        except:
-            pass
