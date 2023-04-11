@@ -65,11 +65,6 @@ services:
         set -axe
 
         function cleanup() {
-            # preserve lights status on exit
-            if [[ -f /tmp/balena/.pet ]] && [[ -d /balena ]]; then
-                cat < /tmp/balena/.pet > /balena/.pet
-                cat < /balena/.pet
-            fi
             sleep infinity
         }
         trap cleanup EXIT

@@ -87,31 +87,44 @@ def get_img_avg():
 
 # FIXME: there has got to be a more elegant way..
 def toggle_light(lights):
+    status = lights
+    # off => on
     if lights in [0]:
         for shift in range(0,2):
             state = bool(int(GPIO.input(light_switch)))
             logging.debug(f'shift: {shift} state: {state}')
             GPIO.output(light_switch, not state)
             sleep(0.1)
-        return 1
+        status = 1
+    # on => off
     elif lights in [1]:
         for shift in range(0,4):
             state = bool(int(GPIO.input(light_switch)))
             logging.debug(f'shift: {shift} state: {state}')
             GPIO.output(light_switch, not state)
             sleep(0.1)
-        return 0
+        status = 0
+    # blinking => off
+    if lights in [2]:
+        for shift in range(0,2):
+            state = bool(int(GPIO.input(light_switch)))
+            logging.debug(f'shift: {shift} state: {state}')
+            GPIO.output(light_switch, not state)
+            sleep(0.1)
+        status = 0
     else:
-        # maybe blinking?
         logging.debug(f'lights: {lights} state: {state}')
+
+    # record light state between container restarts
     try:
         file = '/tmp/balena/.pet'
         with open(file, 'w', encoding='utf-8') as f:
             print(lights, file=f)
-            logging.debug(f'{file}: {lights}')
+            logging.debug(f'{file}: {status}')
     except:
         pass
-    return lights
+
+    return status
 
 async def main():
     imgs_vector = []
@@ -188,5 +201,11 @@ if __name__ == '__main__':
         logging.exception('catastrophy!')
 
     finally:
+        # preserve lights status on exit
+        try:
+            with open(config_file, 'w', encoding='utf-8') as f: print(lights, file=f)
+        except:
+            pass
+
         GPIO.cleanup()
         loop.close()

@@ -1,6 +1,11 @@
 import os
 import math
 
+# https://stackoverflow.com/a/73157979/1559300
+def uptime():
+    with open("/proc/uptime", "rb") as f:
+        return float(f.readline().split(maxsplit=1)[0])
+
 date_format = os.getenv('DATE_FORMAT', '%H:%M %Z')
 gpio_warnings = bool(int(os.getenv('GPIO_WARNINGS', '0')))
 level = os.getenv('LOG_LEVEL', 'INFO')
@@ -34,9 +39,15 @@ log_interval = int(os.getenv('IFEED_LOG_INTERVAL_SECS', '60'))
 max_samples = int(os.getenv('IFEED_MAX_SAMPLES', math.ceil(3600 / log_interval * 24 / 100))) # keep ~ 1% of the last 24 hours worth of samples
 runsecs_meal = float(os.getenv('IFEED_MEAL_RUNSECS', '1.1'))
 runsecs_snack = float(os.getenv('IFEED_SNACK_RUNSECS', '0.2'))
+config_file = os.getenv('IFEED_CONFIG_FILE', '/balena/.pet')
 
 try:
-    with open('/balena/.pet', 'r', encoding='utf-8') as f:
-        lights = int(f.read())
+    # system has to be up for at least five minutes to consider reading from disk
+    assert uptime() > 300
+    with open(config_file, 'r', encoding='utf-8') as f: lights = int(f.read())
 except:
-	lights = int(os.getenv('IFEED_LIGHT_STATUS', '1')) # initial light state (0 off; 1 on; 2 blink)
+    try:
+        os.remove(config_file)
+    except:
+        pass
+    lights = int(os.getenv('IFEED_LIGHT_STATUS', '1')) # initial light state (0 off; 1 on; 2 blink)
