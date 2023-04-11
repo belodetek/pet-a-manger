@@ -1,4 +1,15 @@
 - commits:
+    - subject: refactor reading status
+      hash: a78fb1cab0f1b7633c13251e7db8fc3e8d23c505
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.52
+  title: ""
+  date: 2023-04-11T00:19:33.332Z
+- commits:
     - subject: fix indentation
       hash: e2499be156bb984c4f783875129ee5ab322063ac
       body: ""
