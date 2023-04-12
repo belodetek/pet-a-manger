@@ -1,4 +1,15 @@
 - commits:
+    - subject: multiple meal schedules
+      hash: 7f89a41f1798683c71091b1a179dc9ef150523fb
+      body: ""
+      footer:
+        change-type: patch
+      author: belodetek
+      nested: []
+  version: 0.0.53
+  title: ""
+  date: 2023-04-12T16:13:36.937Z
+- commits:
     - subject: refactor reading status
       hash: a78fb1cab0f1b7633c13251e7db8fc3e8d23c505
       body: ""
