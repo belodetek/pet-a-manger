@@ -8,7 +8,7 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-IWAIT_MEAL_SCHEDULE=${IWAIT_MEAL_SCHEDULE:-21 2 6 * * *}
+IWAIT_MEAL_SCHEDULES=${IWAIT_MEAL_SCHEDULES:-21,2,6,*,*,*}
 IWAIT_MEAL_TRIGGER_CMD=${IWAIT_MEAL_TRIGGER_CMD:-/bin/bash -c \'pgrep python3.10 | xargs kill -s USR2\'}
 IWAIT_SLACK_ERRORS_ONLY=${IWAIT_SLACK_ERRORS_ONLY:-true}
 # semicolon separated cron expressions with commas replacing spaces
@@ -26,13 +26,16 @@ slack-webhook = ${IWAIT_SLACK_WEBHOOK_URL}
 
 EOF
 
-cat << EOF > "${jobconfig}"
-[job-exec "ifeed"]
-schedule = ${IWAIT_MEAL_SCHEDULE}
+for schedule in $(echo "${IWAIT_MEAL_SCHEDULES}" | tr ';' ' '); do
+    cronexpr="$(echo "${schedule}" | tr ',' ' ')"
+    cat << EOF >> "${jobconfig}"
+[job-exec "meal-$((RANDOM))"]
+schedule = ${cronexpr}
 container = ${IWAIT_IFEED_CONTAINER_NAME}
 command = ${IWAIT_MEAL_TRIGGER_CMD}
 
 EOF
+done
 
 for schedule in $(echo "${IWAIT_SNACK_SCHEDULES}" | tr ';' ' '); do
     cronexpr="$(echo "${schedule}" | tr ',' ' ')"

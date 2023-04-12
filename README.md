@@ -13,7 +13,7 @@ Opinionated cat feeder, [optimised for RPi Zero W] and [other materials on hand]
 ## [iwait](https://github.com/mcuadros/ofelia)
 > trigger dispensation on a [cron schedule]
 
-* `IWAIT_MEAL_SCHEDULE` controls cron schedule (e.g. `15 2 6 * * *` to dispense `@06:02:15`)
+* `IWAIT_MEAL_SCHEDULES` controls cron schedule (e.g. `21,2,6,*,*,*` to dispense `@06:02:15`)
 * `IWAIT_SNACK_SCHEDULES` controls cron (snack) schedules
 * `TZ` sets timezone (e.g. `US/Pacific`)
 * `IWAIT_SLACK_{WEBHOOK_URL.ERRORS_ONLY}` controls Slack integration parameters
