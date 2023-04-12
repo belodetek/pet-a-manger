@@ -119,7 +119,7 @@ def toggle_light(lights):
     try:
         file = '/tmp/balena/.pet'
         with open(file, 'w', encoding='utf-8') as f:
-            print(lights, file=f)
+            print(status, file=f)
             logging.debug(f'{file}: {status}')
     except:
         pass
