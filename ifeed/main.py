@@ -8,6 +8,7 @@ import asyncio
 import logging
 import os
 import pytz
+import requests
 import RPi.GPIO as GPIO
 import signal
 
