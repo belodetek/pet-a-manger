@@ -150,16 +150,14 @@ services:
                 sleep "$(((RANDOM%60)+60))s"
             done) &
             raspistill --settings
-            while true; do
-                raspistill --verbose --nopreview \
-                  --output "${ISTREAM_STILL}" \
-                  --width "${ISTREAM_IMAGE_WIDTH}" \
-                  --height "${ISTREAM_IMAGE_HEIGHT}" \
-                  --rotation "${ISTREAM_IMAGE_ROTATE}" \
-                  --annotate "${ISTREAM_IMAGE_ANNOTATE}" \
-                  --timelapse 60000 \
-                  --timeout 3600000
-            done
+            raspistill --verbose --nopreview \
+              --annotate "${ISTREAM_IMAGE_ANNOTATE}" \
+              --height "${ISTREAM_IMAGE_HEIGHT}" \
+              --output "${ISTREAM_STILL}" \
+              --rotation "${ISTREAM_IMAGE_ROTATE}" \
+              --signal \
+              --timeout 0 \
+              --width "${ISTREAM_IMAGE_WIDTH}"
         else
             false
         fi
