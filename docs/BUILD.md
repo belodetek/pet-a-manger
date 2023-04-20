@@ -29,8 +29,7 @@ to bring 12VDC down to 5VDC for the RPi. Everything was soldered onto a breadboa
 was installed in old hair product plastic box with holes drilled in for cabling. The
 camera is an old RPi module (~ v1.3) with a fish eye lens replacing the stock lens. It's
 housed in an old dental floss box and secured under the slotted steel angle with velcro
-tape. The light was the last minute addition, up-cycled from a bicycle light found on a
-street a decade or so ago.
+tape.
 
 The main [ifeed] software is written in Python and held together with Bash scrips in a
 ["balenafied" Docker compose]. Servos can be controlled by momentary switches as well as

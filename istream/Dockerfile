@@ -20,8 +20,7 @@ RUN apk add --no-cache \
     curl \
     ffmpeg \
     jq \
-    raspberrypi \
-    vips-tools
+    raspberrypi
 
 ENV PATH="/opt/vc/bin:${PATH}"
 

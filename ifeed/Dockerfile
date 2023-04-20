@@ -4,7 +4,6 @@ WORKDIR /usr/src/app
 
 RUN apk add --no-cache \
     bash \
-    py3-requests \
     py3-rpigpio \
     py3-tz \
     vim
