@@ -15,6 +15,9 @@ IWAIT_SLACK_ERRORS_ONLY=${IWAIT_SLACK_ERRORS_ONLY:-true}
 IWAIT_SNACK_SCHEDULES=${IWAIT_SNACK_SCHEDULES:-42,2,12,*,*,*;19,1,19,*,*,*}
 IWAIT_SNACK_TRIGGER_CMD=${IWAIT_SNACK_TRIGGER_CMD:-/bin/bash -c \'pgrep python3.10 | xargs kill -s USR1\'}
 IWAIT_IFEED_CONTAINER_NAME=${IWAIT_IFEED_CONTAINER_NAME:-$(docker ps -q --filter 'name=ifeed*' --format '{{.Names}}')}
+IWAIT_ISTREAM_SCHEDULES=${IWAIT_ISTREAM_SCHEDULES:-21,3,6,*,*,*;42,3,12,*,*,*;19,2,19,*,*,*}
+IWAIT_ISTREAM_TRIGGER_CMD=${IWAIT_ISTREAM_TRIGGER_CMD:-/bin/bash -c \'pgrep raspistill | xargs kill -s USR1\'}
+IWAIT_ISTREAM_CONTAINER_NAME=${IWAIT_ISTREAM_CONTAINER_NAME:-$(docker ps -q --filter 'name=istream*' --format '{{.Names}}')}
 
 globconfig="$(mktemp)"
 jobconfig="$(mktemp)"
@@ -44,6 +47,17 @@ for schedule in $(echo "${IWAIT_SNACK_SCHEDULES}" | tr ';' ' '); do
 schedule = ${cronexpr}
 container = ${IWAIT_IFEED_CONTAINER_NAME}
 command = ${IWAIT_SNACK_TRIGGER_CMD}
+
+EOF
+done
+
+for schedule in $(echo "${IWAIT_ISTREAM_SCHEDULES}" | tr ';' ' '); do
+    cronexpr="$(echo "${schedule}" | tr ',' ' ')"
+    cat << EOF >> "${jobconfig}"
+[job-exec "snap-$((RANDOM))"]
+schedule = ${cronexpr}
+container = ${IWAIT_ISTREAM_CONTAINER_NAME}
+command = ${IWAIT_ISTREAM_TRIGGER_CMD}
 
 EOF
 done
