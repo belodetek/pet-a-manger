@@ -1,4 +1,15 @@
 - commits:
+    - subject: lock python version
+      hash: ff09299bfeabf4151b7ee14bbc0a1243d8d06dff
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.58
+  title: ""
+  date: 2023-05-15T21:51:05.973Z
+- commits:
     - subject: remove default snaps schedule
       hash: b13c22660f164f914409b8845d71f60522155b2f
       body: ""
