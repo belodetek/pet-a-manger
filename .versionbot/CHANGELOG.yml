@@ -1,4 +1,15 @@
 - commits:
+    - subject: remove default snaps schedule
+      hash: b13c22660f164f914409b8845d71f60522155b2f
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.57
+  title: ""
+  date: 2023-05-15T21:22:13.448Z
+- commits:
     - subject: replace requests
       hash: 8c2d31e2806587f9d2a902d642f634730fee0a2f
       body: ""
