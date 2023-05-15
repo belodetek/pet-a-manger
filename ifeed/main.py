@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.10
+#!/usr/bin/python3
 
 from config import *
 from datetime import datetime
