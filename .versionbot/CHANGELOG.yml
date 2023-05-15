@@ -1,4 +1,15 @@
 - commits:
+    - subject: correct python location
+      hash: e46d0e4c9721b378234a2f0fa65a7740b87d645a
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.59
+  title: ""
+  date: 2023-05-15T22:26:25.327Z
+- commits:
     - subject: lock python version
       hash: ff09299bfeabf4151b7ee14bbc0a1243d8d06dff
       body: ""
