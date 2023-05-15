@@ -1,4 +1,4 @@
-FROM arm32v6/python:3.10-alpine
+FROM arm32v6/python:3-alpine
 
 WORKDIR /usr/src/app
 
