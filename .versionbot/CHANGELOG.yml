@@ -1,4 +1,15 @@
 - commits:
+    - subject: don't always restart
+      hash: 4ed5778fd73cf92730397ff32365794f99ae582d
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.0.60
+  title: ""
+  date: 2023-05-21T23:07:10.353Z
+- commits:
     - subject: correct python location
       hash: e46d0e4c9721b378234a2f0fa65a7740b87d645a
       body: ""
