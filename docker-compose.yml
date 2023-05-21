@@ -12,6 +12,7 @@ x-common: &common
 services:
   iserve:
     image: arm32v6/traefik@sha256:10b691b83d9ed9bac5ac8d7c37c79398bfec79e73c5b7882a6d6da069d3eb277
+    <<: *common
     command:
       - --accesslog=true
       - --entrypoints.web.address=:80
@@ -35,6 +36,8 @@ services:
   iwait:
     build:
       context: iwait
+    <<: *common
+    restart: always
     depends_on:
       - ifeed
     entrypoint:
@@ -47,8 +50,6 @@ services:
       timeout: 15s
       retries: 3
       start_period: 30s
-    <<: *common
-    restart: always
     labels:
       io.balena.features.balena-socket: '1'
 
