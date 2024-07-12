@@ -1,4 +1,16 @@
 - commits:
+    - subject: RPi0 struggles to run with non-core containers
+      hash: c408d4f9b00a4925b6698f6cd4c81e7bd210d19e
+      body: |
+        * ifeed and iwait are the only core services required to feed cats
+      footer:
+        change-type: minor
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.0
+  title: ""
+  date: 2024-07-12T04:24:05.903Z
+- commits:
     - subject: don't always restart
       hash: 4ed5778fd73cf92730397ff32365794f99ae582d
       body: ""
