@@ -30,6 +30,6 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
     with:
-      balena_slugs: gh_ab77/pet-a-manger
+      balena_slugs: carate_road/pet-a-manger
       cloudflare_website: "pet-a-manger"
       docusaurus_website: true
