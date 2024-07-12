@@ -10,27 +10,27 @@ x-common: &common
   restart: unless-stopped
 
 services:
-  iserve:
-    image: arm32v6/traefik@sha256:10b691b83d9ed9bac5ac8d7c37c79398bfec79e73c5b7882a6d6da069d3eb277
-    <<: *common
-    command:
-      - --accesslog=true
-      - --entrypoints.web.address=:80
-      - --log.level=DEBUG
-      - --ping=true
-      - --providers.docker.endpoint=unix:///var/run/balena.sock
-      - --providers.docker.exposedbydefault=false
-      - --providers.docker=true
-    healthcheck:
-      test: wget -qO /dev/null localhost:8080/ping
-      interval: 60s
-      timeout: 15s
-      retries: 3
-      start_period: 30s
-    ports:
-      - "80:80"
-    labels:
-      io.balena.features.balena-socket: '1'
+#   iserve:
+#     image: arm32v6/traefik@sha256:10b691b83d9ed9bac5ac8d7c37c79398bfec79e73c5b7882a6d6da069d3eb277
+#     <<: *common
+#     command:
+#       - --accesslog=true
+#       - --entrypoints.web.address=:80
+#       - --log.level=DEBUG
+#       - --ping=true
+#       - --providers.docker.endpoint=unix:///var/run/balena.sock
+#       - --providers.docker.exposedbydefault=false
+#       - --providers.docker=true
+#     healthcheck:
+#       test: wget -qO /dev/null localhost:8080/ping
+#       interval: 60s
+#       timeout: 15s
+#       retries: 3
+#       start_period: 30s
+#     ports:
+#       - "80:80"
+#     labels:
+#       io.balena.features.balena-socket: '1'
 
   # https://github.com/mcuadros/ofelia
   iwait:
@@ -89,154 +89,154 @@ services:
       io.balena.update.strategy: 'kill-then-download'
       io.resin.features.kernel-modules: '1'
 
-  istream:
-    build:
-      context: istream
-    <<: *common
-    entrypoint:
-      - /bin/bash
-      - -c
-    command:
-      - |
-        set -axe
-
-        function cleanup() {
-            rm -f "${ISTREAM_STILL}"
-            sleep infinity
-        }
-        trap cleanup EXIT
-
-        ISTREAM_H264_PROFILE=${H264_PROFILE:-main}
-        ISTREAM_VIDEO_WIDTH=${VIDEO_WIDTH:-320}
-        ISTREAM_VIDEO_HEIGHT=${VIDEO_HEIGHT:-192}
-        ISTREAM_VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-15}
-        ISTREAM_VIDEO_BITRATE=${VIDEO_BITRATE:-250000}
-        ISTREAM_KEYFRAME_RATE=${KEYFRAME_RATE:-30}
-        ISTREAM_AUDIO_SAMPLE_RATE=${ISTREAM_AUDIO_SAMPLE_RATE:-44100}  # audio not used
-        ISTREAM_IMAGE_HEIGHT=${ISTREAM_IMAGE_HEIGHT:-1280}
-        ISTREAM_IMAGE_WIDTH=${ISTREAM_IMAGE_WIDTH:-960}
-        ISTREAM_IMAGE_ROTATE=${ISTREAM_IMAGE_ROTATE:-90}
-        ISTREAM_IMAGE_ANNOTATE=${ISTREAM_IMAGE_ANNOTATE:-1024}
-
-        # https://medium.com/@allanlei/streaming-your-raspberrypi-camera-6ad02edcaae7
-        if [[ -n "$ISTREAM_RTMP_URL" ]]; then
-            exec raspivid -n -t 0 -fl -hf -o - \
-              -w "${ISTREAM_VIDEO_WIDTH}" \
-              -h "${ISTREAM_VIDEO_HEIGHT}" \
-              -fps "${ISTREAM_VIDEO_FRAMERATE}" \
-              -b "${ISTREAM_VIDEO_BITRATE}" \
-              -pf "${ISTREAM_H264_PROFILE}" \
-              -g "${ISTREAM_KEYFRAME_RATE}" \
-              | ffmpeg \
-              -f lavfi \
-              -i "anullsrc=channel_layout=stereo:sample_rate=${ISTREAM_AUDIO_SAMPLE_RATE}" \
-              -i pipe:0 \
-              -c:v copy \
-              -c:a aac \
-              -strict experimental \
-              -f flv "${ISTREAM_RTMP_URL}"
-
-        # capture and serve stills
-        elif [[ -n "$ISTREAM_STILL" ]]; then
-            webroot="$(dirname "${ISTREAM_STILL}")"
-            test -f "${webroot}/favicon.ico" || ln -s /root/favicon.ico ${webroot}/favicon.ico
-            nweb 80 "${webroot}"
-            pgrep nweb
-            raspistill --settings
-            raspistill --verbose --nopreview \
-              --annotate "${ISTREAM_IMAGE_ANNOTATE}" \
-              --height "${ISTREAM_IMAGE_HEIGHT}" \
-              --output "${ISTREAM_STILL}" \
-              --rotation "${ISTREAM_IMAGE_ROTATE}" \
-              --signal \
-              --timeout 0 \
-              --width "${ISTREAM_IMAGE_WIDTH}"
-        else
-            false
-        fi
-
-    healthcheck:
-      test: pgrep raspivid || pgrep raspistill
-      interval: 60s
-      timeout: 15s
-      retries: 3
-      start_period: 30s
-    devices:
-      - /dev/vchiq
-      - /dev/video0
-      - /dev/dma_heap
-      - /dev/vcsm-cma
-    labels:
-      io.balena.features.sysfs: '1'
-      io.balena.update.strategy: 'kill-then-download'
-      io.resin.features.kernel-modules: '1'
-      traefik.enable: 'true'
-      traefik.http.routers.istream.entrypoints: 'web'
-      # https://community.traefik.io/t/how-to-match-for-file-extension-at-end-of-path/16838/3
-      traefik.http.routers.istream.rule: 'Path(`/{path:(?i:.*\.(jpeg|jpg|png|json|ico)$)}`)'
-      traefik.http.services.istream.loadbalancer.server.port: '80'
-
-  iwatch:
-    build:
-      context: iwatch
-    <<: *common
-    entrypoint:
-      - /bin/bash
-      - -c
-    command:
-      - |
-        set -axe
-
-        function cleanup() {
-            sleep infinity
-        }
-        trap cleanup EXIT
-
-        # https://funprojects.blog/2021/04/11/a-web-server-in-1-line-of-bash/
-        (while true; do
-            json="$(docker ps --all --no-trunc --format="{{json .}}" | jq -rc '{Names, Status, State}' | jq -cs)"
-            echo -e "HTTP/1.1 200 OK\n\n${json}" \
-              | nc -l -k -p 8080 -q 3
-        done) &
-
-        if [[ -z "$IWATCH_REDIRECT_URL" ]] && [[ -n "$ISTREAM_STILL" ]]; then
-            IWATCH_REDIRECT_URL="/$(basename "${ISTREAM_STILL}")"
-        fi
-
-        # serve static HTML
-        if [[ -n "$IWATCH_STATIC_HTML" ]]; then
-            echo "${IWATCH_STATIC_HTML}" > iwatch.html
-            while true; do
-                echo -e 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n' \
-                  | cat - iwatch.html | nc -l -k -p 80 -q 1
-            done
-
-        # .. or serve HTTP redirect
-        elif [[ -n "$IWATCH_REDIRECT_URL" ]]; then
-            while true; do
-                echo -e "HTTP/1.1 302 Found\r\nLocation: ${IWATCH_REDIRECT_URL}\r\nConnection: close\r\n\r\n" \
-                  | nc -l -k -p 80 -q 1
-            done
-
-        else
-            false
-        fi
-
-    healthcheck:
-      test: pgrep nc
-      interval: 60s
-      timeout: 15s
-      retries: 3
-      start_period: 30s
-    labels:
-      io.balena.features.balena-socket: '1'
-      io.balena.update.strategy: 'kill-then-download'
-      traefik.enable: 'true'
-      traefik.http.routers.iwatch1.entrypoints: 'web'
-      traefik.http.routers.iwatch1.service: 'iwatch1'
-      traefik.http.routers.iwatch1.rule: 'Path(`/`)'
-      traefik.http.services.iwatch1.loadbalancer.server.port: '80'
-      traefik.http.routers.iwatch2.entrypoints: 'web'
-      traefik.http.routers.iwatch2.service: 'iwatch2'
-      traefik.http.routers.iwatch2.rule: 'Path(`/health`)'
-      traefik.http.services.iwatch2.loadbalancer.server.port: '8080'
+#   istream:
+#     build:
+#       context: istream
+#     <<: *common
+#     entrypoint:
+#       - /bin/bash
+#       - -c
+#     command:
+#       - |
+#         set -axe
+# 
+#         function cleanup() {
+#             rm -f "${ISTREAM_STILL}"
+#             sleep infinity
+#         }
+#         trap cleanup EXIT
+# 
+#         ISTREAM_H264_PROFILE=${H264_PROFILE:-main}
+#         ISTREAM_VIDEO_WIDTH=${VIDEO_WIDTH:-320}
+#         ISTREAM_VIDEO_HEIGHT=${VIDEO_HEIGHT:-192}
+#         ISTREAM_VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-15}
+#         ISTREAM_VIDEO_BITRATE=${VIDEO_BITRATE:-250000}
+#         ISTREAM_KEYFRAME_RATE=${KEYFRAME_RATE:-30}
+#         ISTREAM_AUDIO_SAMPLE_RATE=${ISTREAM_AUDIO_SAMPLE_RATE:-44100}  # audio not used
+#         ISTREAM_IMAGE_HEIGHT=${ISTREAM_IMAGE_HEIGHT:-1280}
+#         ISTREAM_IMAGE_WIDTH=${ISTREAM_IMAGE_WIDTH:-960}
+#         ISTREAM_IMAGE_ROTATE=${ISTREAM_IMAGE_ROTATE:-90}
+#         ISTREAM_IMAGE_ANNOTATE=${ISTREAM_IMAGE_ANNOTATE:-1024}
+# 
+#         # https://medium.com/@allanlei/streaming-your-raspberrypi-camera-6ad02edcaae7
+#         if [[ -n "$ISTREAM_RTMP_URL" ]]; then
+#             exec raspivid -n -t 0 -fl -hf -o - \
+#               -w "${ISTREAM_VIDEO_WIDTH}" \
+#               -h "${ISTREAM_VIDEO_HEIGHT}" \
+#               -fps "${ISTREAM_VIDEO_FRAMERATE}" \
+#               -b "${ISTREAM_VIDEO_BITRATE}" \
+#               -pf "${ISTREAM_H264_PROFILE}" \
+#               -g "${ISTREAM_KEYFRAME_RATE}" \
+#               | ffmpeg \
+#               -f lavfi \
+#               -i "anullsrc=channel_layout=stereo:sample_rate=${ISTREAM_AUDIO_SAMPLE_RATE}" \
+#               -i pipe:0 \
+#               -c:v copy \
+#               -c:a aac \
+#               -strict experimental \
+#               -f flv "${ISTREAM_RTMP_URL}"
+# 
+#         # capture and serve stills
+#         elif [[ -n "$ISTREAM_STILL" ]]; then
+#             webroot="$(dirname "${ISTREAM_STILL}")"
+#             test -f "${webroot}/favicon.ico" || ln -s /root/favicon.ico ${webroot}/favicon.ico
+#             nweb 80 "${webroot}"
+#             pgrep nweb
+#             raspistill --settings
+#             raspistill --verbose --nopreview \
+#               --annotate "${ISTREAM_IMAGE_ANNOTATE}" \
+#               --height "${ISTREAM_IMAGE_HEIGHT}" \
+#               --output "${ISTREAM_STILL}" \
+#               --rotation "${ISTREAM_IMAGE_ROTATE}" \
+#               --signal \
+#               --timeout 0 \
+#               --width "${ISTREAM_IMAGE_WIDTH}"
+#         else
+#             false
+#         fi
+# 
+#     healthcheck:
+#       test: pgrep raspivid || pgrep raspistill
+#       interval: 60s
+#       timeout: 15s
+#       retries: 3
+#       start_period: 30s
+#     devices:
+#       - /dev/vchiq
+#       - /dev/video0
+#       - /dev/dma_heap
+#       - /dev/vcsm-cma
+#     labels:
+#       io.balena.features.sysfs: '1'
+#       io.balena.update.strategy: 'kill-then-download'
+#       io.resin.features.kernel-modules: '1'
+#       traefik.enable: 'true'
+#       traefik.http.routers.istream.entrypoints: 'web'
+#       # https://community.traefik.io/t/how-to-match-for-file-extension-at-end-of-path/16838/3
+#       traefik.http.routers.istream.rule: 'Path(`/{path:(?i:.*\.(jpeg|jpg|png|json|ico)$)}`)'
+#       traefik.http.services.istream.loadbalancer.server.port: '80'
+# 
+#   iwatch:
+#     build:
+#       context: iwatch
+#     <<: *common
+#     entrypoint:
+#       - /bin/bash
+#       - -c
+#     command:
+#       - |
+#         set -axe
+# 
+#         function cleanup() {
+#             sleep infinity
+#         }
+#         trap cleanup EXIT
+# 
+#         # https://funprojects.blog/2021/04/11/a-web-server-in-1-line-of-bash/
+#         (while true; do
+#             json="$(docker ps --all --no-trunc --format="{{json .}}" | jq -rc '{Names, Status, State}' | jq -cs)"
+#             echo -e "HTTP/1.1 200 OK\n\n${json}" \
+#               | nc -l -k -p 8080 -q 3
+#         done) &
+# 
+#         if [[ -z "$IWATCH_REDIRECT_URL" ]] && [[ -n "$ISTREAM_STILL" ]]; then
+#             IWATCH_REDIRECT_URL="/$(basename "${ISTREAM_STILL}")"
+#         fi
+# 
+#         # serve static HTML
+#         if [[ -n "$IWATCH_STATIC_HTML" ]]; then
+#             echo "${IWATCH_STATIC_HTML}" > iwatch.html
+#             while true; do
+#                 echo -e 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n' \
+#                   | cat - iwatch.html | nc -l -k -p 80 -q 1
+#             done
+# 
+#         # .. or serve HTTP redirect
+#         elif [[ -n "$IWATCH_REDIRECT_URL" ]]; then
+#             while true; do
+#                 echo -e "HTTP/1.1 302 Found\r\nLocation: ${IWATCH_REDIRECT_URL}\r\nConnection: close\r\n\r\n" \
+#                   | nc -l -k -p 80 -q 1
+#             done
+# 
+#         else
+#             false
+#         fi
+# 
+#     healthcheck:
+#       test: pgrep nc
+#       interval: 60s
+#       timeout: 15s
+#       retries: 3
+#       start_period: 30s
+#     labels:
+#       io.balena.features.balena-socket: '1'
+#       io.balena.update.strategy: 'kill-then-download'
+#       traefik.enable: 'true'
+#       traefik.http.routers.iwatch1.entrypoints: 'web'
+#       traefik.http.routers.iwatch1.service: 'iwatch1'
+#       traefik.http.routers.iwatch1.rule: 'Path(`/`)'
+#       traefik.http.services.iwatch1.loadbalancer.server.port: '80'
+#       traefik.http.routers.iwatch2.entrypoints: 'web'
+#       traefik.http.routers.iwatch2.service: 'iwatch2'
+#       traefik.http.routers.iwatch2.rule: 'Path(`/health`)'
+#       traefik.http.services.iwatch2.loadbalancer.server.port: '8080'
