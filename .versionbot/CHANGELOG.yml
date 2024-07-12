@@ -1,4 +1,15 @@
 - commits:
+    - subject: Remove spurious libraries
+      hash: bc4fa0c8854cd2ba1fb6d02a243a845cb2f69658
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.1
+  title: ""
+  date: 2024-07-12T05:15:26.851Z
+- commits:
     - subject: RPi0 struggles to run with non-core containers
       hash: c408d4f9b00a4925b6698f6cd4c81e7bd210d19e
       body: |
