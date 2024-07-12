@@ -9,6 +9,9 @@ RUN apk add --no-cache \
     py3-tz \
     vim
 
+# https://github.com/python/cpython/issues/120788#issuecomment-2181130364
+RUN rm -rf /usr/lib/python3.12/lib-dynload
+
 COPY . .
 
 CMD [ "sleep", "infinity" ]
