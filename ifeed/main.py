@@ -51,6 +51,7 @@ def dispenser(pwms, runsecs, signum, frame):
             if signum in alert_reset_signals:
                 r = requests.get(alert_reset_url)
                 logging.info(f'pwm:{pwm} signum:{signum} runsecs:{runsecs} dispensation:{success} url:{alert_reset_url} status_code:{r.status_code} headers:{r.headers} content:{r.content} text:{r.text}')
+            sleep(5)
         except:
             logging.exception('catastrophy!')
             pwm.ChangeDutyCycle(0)
