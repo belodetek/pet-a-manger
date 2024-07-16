@@ -1,4 +1,15 @@
 - commits:
+    - subject: Sleep between dispensations
+      hash: 0170c7af802368b57d684692855ead9aada74166
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.2
+  title: ""
+  date: 2024-07-16T03:28:17.113Z
+- commits:
     - subject: Remove spurious libraries
       hash: bc4fa0c8854cd2ba1fb6d02a243a845cb2f69658
       body: ""
