@@ -1,4 +1,4 @@
-FROM arm32v6/python:3-alpine
+FROM arm32v6/python:3.12-alpine
 
 WORKDIR /usr/src/app
 
@@ -7,10 +7,8 @@ RUN apk add --no-cache \
     py3-requests \
     py3-rpigpio \
     py3-tz \
+    py3-flask \
     vim
-
-# https://github.com/python/cpython/issues/120788#issuecomment-2181130364
-RUN rm -rf /usr/lib/python3.12/lib-dynload
 
 COPY . .
 
