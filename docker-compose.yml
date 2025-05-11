@@ -72,6 +72,8 @@ services:
 
         exec ./main.py
 
+    ports:
+      - "5000:5000"
     volumes:
       - 'resin-data:/balena'
     healthcheck:
@@ -88,6 +90,26 @@ services:
       io.balena.features.sysfs: '1'
       io.balena.update.strategy: 'kill-then-download'
       io.resin.features.kernel-modules: '1'
+
+  oauth-proxy-carbonaut:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+    <<: *common
+    depends_on:
+      - ifeed
+    environment:
+      OAUTH2_PROXY_PROVIDER: github
+      OAUTH2_PROXY_CLIENT_ID: ${OAUTH2_PROXY_CLIENT_ID}
+      OAUTH2_PROXY_CLIENT_SECRET: ${OAUTH2_PROXY_CLIENT_SECRET}
+      OAUTH2_PROXY_COOKIE_SECRET: ${OAUTH2_PROXY_COOKIE_SECRET}
+      OAUTH2_PROXY_EMAIL_DOMAINS: "*"
+      OAUTH2_PROXY_UPSTREAMS: "http://ifeed:5000"
+      OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
+      OAUTH2_PROXY_REDIRECT_URL: ${OAUTH2_PROXY_REDIRECT_URL}
+      OAUTH2_PROXY_GITHUB_ORG: ${OAUTH2_PROXY_GITHUB_ORG}
+      OAUTH2_PROXY_GITHUB_TEAM: ${OAUTH2_PROXY_GITHUB_TEAM}
+      OAUTH2_PROXY_SKIP_AUTH_PREFLIGHT: "true"
+    ports:
+      - "80:4180"  # from balena-proxy/public device URL(s)
 
 #   istream:
 #     build:
