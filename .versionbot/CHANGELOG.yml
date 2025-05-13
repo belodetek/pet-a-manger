@@ -1,4 +1,20 @@
 - commits:
+    - subject: "patch: Versioning"
+      hash: 96666a2d469f2e601e01479775a6a4d6a8ee221e
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+    - subject: "minor: Carbonaut (Kiblenetes API)"
+      hash: 10aba20a82841145a7b421ed8d11d1c7d4c26ee3
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.2.0
+  title: ""
+  date: 2025-05-13T03:38:50.310Z
+- commits:
     - subject: Sleep between dispensations
       hash: 0170c7af802368b57d684692855ead9aada74166
       body: ""
