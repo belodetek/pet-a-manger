@@ -1,4 +1,4 @@
-FROM mcuadros/ofelia@sha256:441a5ee0cd44d14e295b69ee1aa2cc3b1b73038bfc1b7744c4d9c9103d4badf7
+FROM mcuadros/ofelia@sha256:d37e9a4cc2ee15c6eb3f3a640b4f3c2a78ec0207c039dbf456624875281e078b
 
 RUN apk add --no-cache docker-cli
 
