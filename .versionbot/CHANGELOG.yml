@@ -1,5 +1,15 @@
 - commits:
     - subject: "patch: Rebuild for TZ changes"
+      hash: 19cd4da3ffc47981cda20950f762eca13c78917e
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.2.2
+  title: ""
+  date: 2026-11-05T17:27:51.470Z
+- commits:
+    - subject: "patch: Rebuild for TZ changes"
       hash: ac8a1abd312aebebea75ccb155a63c1d0d6e1b2b
       body: ""
       footer: {}
