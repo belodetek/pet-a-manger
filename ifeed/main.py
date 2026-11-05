@@ -189,9 +189,10 @@ if __name__ == "__main__":
             signal.SIGUSR2, partial(dispenser, list(PWMS.values()), runsecs_meal)
         )
 
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
+        asyncio.run(main())
 
+    except (KeyboardInterrupt, SystemExit):
+        logging.info("Shutting down cleanly...")
     except:
         logging.exception("catastrophy!")
 

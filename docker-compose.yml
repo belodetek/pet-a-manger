@@ -92,7 +92,7 @@ services:
       io.resin.features.kernel-modules: '1'
 
   oauth-proxy-carbonaut:
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+    image: quay.io/oauth2-proxy/oauth2-proxy@sha256:84ac531b038f3eb417a24d525bc26389b9f6ae4443b043926409cc1195abf038
     <<: *common
     depends_on:
       - ifeed
