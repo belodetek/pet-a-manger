@@ -92,10 +92,16 @@ services:
       io.resin.features.kernel-modules: '1'
 
   oauth-proxy-carbonaut:
-    image: quay.io/oauth2-proxy/oauth2-proxy@sha256:84ac531b038f3eb417a24d525bc26389b9f6ae4443b043926409cc1195abf038
+    # https://quay.io/repository/oauth2-proxy/oauth2-proxy/manifest/sha256:5d3afcb1c02a6066758bfde8abed04945c6d6986be6e60bed4fc564e78f94428
+    image: quay.io/oauth2-proxy/oauth2-proxy@sha256:5d3afcb1c02a6066758bfde8abed04945c6d6986be6e60bed4fc564e78f94428  # v7.15.6-alpine armhf
     <<: *common
     depends_on:
       - ifeed
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        printf '%s\n' "${OAUTH2_PROXY_HTPASSWD}" >"${OAUTH2_PROXY_HTPASSWD_FILE}"
+        exec /bin/oauth2-proxy
     environment:
       OAUTH2_PROXY_PROVIDER: github
       OAUTH2_PROXY_CLIENT_ID: ${OAUTH2_PROXY_CLIENT_ID}
@@ -108,6 +114,9 @@ services:
       OAUTH2_PROXY_GITHUB_ORG: ${OAUTH2_PROXY_GITHUB_ORG}
       OAUTH2_PROXY_GITHUB_TEAM: ${OAUTH2_PROXY_GITHUB_TEAM}
       OAUTH2_PROXY_SKIP_AUTH_PREFLIGHT: "true"
+      OAUTH2_PROXY_HTPASSWD: ${OAUTH2_PROXY_HTPASSWD}
+      OAUTH2_PROXY_HTPASSWD_FILE: "/tmp/htpasswd"
+      OAUTH2_PROXY_DISPLAY_HTPASSWD_FORM: "false"
     ports:
       - "80:4180"  # from balena-proxy/public device URL(s)
 
