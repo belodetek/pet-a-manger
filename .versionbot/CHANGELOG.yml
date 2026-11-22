@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: onlyCats"
+      hash: 8fb13b0701b2a1a9b7e92b9000f593d67158b05b
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.2.3
+  title: ""
+  date: 2026-11-22T04:13:26.099Z
+- commits:
     - subject: "patch: Rebuild for TZ changes"
       hash: 19cd4da3ffc47981cda20950f762eca13c78917e
       body: ""
