@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update arm32v6/python Docker tag to v3.15"
+      hash: 1f42a68597a66f5bc285e1ad82d80e0990d6821c
+      body: Update arm32v6/python from 3.14 to 3.15
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.2.5
+  title: ""
+  date: 2026-11-23T17:22:50.257Z
+- commits:
     - subject: "patch: Pin product-os/flowzone action to 2e1c63b"
       hash: 546d9644593f5ce0ffe6e667fda53ec0479b1ad1
       body: Update product-os/flowzone
