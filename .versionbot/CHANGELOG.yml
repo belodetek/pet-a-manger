@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update product-os/flowzone digest to 1c5c459"
+      hash: 18b098b9a31cca13d0aedf1f028e84d9f1be4506
+      body: Update product-os/flowzone
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.2.7
+  title: ""
+  date: 2026-11-23T23:34:33.484Z
+- commits:
     - subject: "patch: Update mcuadros/ofelia Docker digest to 75c3a3d"
       hash: de24f8d585baf8b5986af6bda2d0eff075aa0dd2
       body: Update mcuadros/ofelia
