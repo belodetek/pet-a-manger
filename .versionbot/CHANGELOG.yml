@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update product-os/flowzone digest to 791b50c"
+      hash: fc5468390f3a1bdcedf187526b1573ec760f7c06
+      body: Update product-os/flowzone
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.2.8
+  title: ""
+  date: 2026-11-25T15:26:44.499Z
+- commits:
     - subject: "patch: Update product-os/flowzone digest to 1c5c459"
       hash: 18b098b9a31cca13d0aedf1f028e84d9f1be4506
       body: Update product-os/flowzone
